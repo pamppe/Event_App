@@ -15,24 +15,22 @@ struct ContentView2: View {
                 } else {
                     ForEach(events) { event in
                         VStack(alignment: .leading) {
-                            Text(event.name)
+                            Text(event.name.fi)
                             // Add other UI elements for each event
                         }
                     }
                 }
             }
             .onAppear {
-                            isLoading = true
-                            fetchAPIResponse(endpoint: "event/") { (result: Result<EventResponse, Error>) in
-                                DispatchQueue.main.async {
-                                    isLoading = false
-                                    switch result {
-                                    case .success(let response):
-                                        print("Events fetched: \(response.events)")
-                                        self.events = response.events
-                                    case .failure(let error):
-                                        print("Error fetching events: \(error.localizedDescription)")
-                                        self.errorMessage = error.localizedDescription
+                isLoading = true
+                  fetchEventData { result in
+                      DispatchQueue.main.async {
+                          isLoading = false
+                          switch result {
+                          case .success(let events):
+                              self.events = events
+                          case .failure(let error):
+                              self.errorMessage = error.localizedDescription
                                     }
                     }
                 }
