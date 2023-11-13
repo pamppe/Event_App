@@ -28,6 +28,9 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             completion(.success(response.data))
         } catch {
             print("Error decoding data: \(error)")
+            if let decodingError = error as? DecodingError {
+                print(decodingError)
+            }
             completion(.failure(error))
         }
     }
@@ -47,6 +50,12 @@ struct Event: Identifiable, Codable {
         case name
     }
 }
-struct LocalizedString: Codable {
-    let fi: String
+typealias LocalizedString = [String: String]
+
+// Helper function to get the first available translation
+extension LocalizedString {
+    func nameInAnyLanguage() -> String {
+        return self.values.first ?? "Unnamed Event"
+    }
 }
+

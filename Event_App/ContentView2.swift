@@ -14,10 +14,7 @@ struct ContentView2: View {
                     Text("Error: \(errorMessage)")
                 } else {
                     ForEach(events) { event in
-                        VStack(alignment: .leading) {
-                            Text(event.name.fi)
-                            // Add other UI elements for each event
-                        }
+                        Text(event.name.nameInAnyLanguage())
                     }
                 }
             }
