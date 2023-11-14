@@ -14,21 +14,44 @@ struct ContentView2: View {
                     Text("Error: \(errorMessage)")
                 } else {
                     ForEach(events) { event in
-                        Text(event.name.nameInAnyLanguage())
+                    VStack(alignment: .leading) {
+                        Text(event.name.nameInLanguage())
+                            .font(.headline)
+                        
+                        if let imageUrl = event.images.first?.url,
+                           let encodedUrlString = imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                           let url = URL(string: encodedUrlString) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                case .failure:
+                                    Text("Image not available") // Display a text view in case of failure
+                                @unknown default:
+                                    EmptyView() // Fallback to an empty view for any unknown case
+                                }
+                            }
+                            .frame(height: 200)
+                        }
                     }
                 }
             }
-            .onAppear {
-                isLoading = true
+        }
+        .onAppear {
+            isLoading = true
                   fetchEventData { result in
                       DispatchQueue.main.async {
                           isLoading = false
                           switch result {
-                          case .success(let events):
-                              self.events = events
+                          case .success(let fetchedEvents):
+                              self.events = removeDuplicateEvents(events: fetchedEvents)
                           case .failure(let error):
                               self.errorMessage = error.localizedDescription
-                                    }
+                        }
                     }
                 }
             }
