@@ -2,15 +2,13 @@ import SwiftUI
 
 
 struct ContentView: View {
-    
+    private var listOfEvents: [Event] = []
     @State var searchText = ""
     @State private var showMenu: Bool = false
     
     var body: some View {
         NavigationView {
             ZStack{
-                Text("Hellurei")
-                
                 VStack{
                     EventCardView()
                         .navigationBarTitle("Main page", displayMode: .inline)
@@ -24,8 +22,6 @@ struct ContentView: View {
                 }
                 .background(Color.black.opacity(showMenu ? 0.5 : 0))
             }
-        
-            .searchable(text: $searchText)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Button{
@@ -43,7 +39,19 @@ struct ContentView: View {
                 }
             }
         }
+        .searchable(text: $searchText)
     }
+    
+    
+    //    var events: [Event] {
+    //        let lcEvents = listOfEvents.map { $0.nameInLanguage().lowercased() }
+    //
+    //        return searchText.isEmpty ? listOfEvents : listOfEvents.filter {
+    //            $0.nameInLanguage().lowercased().contains(searchText.lowercased())
+    //        }
+    //    }
+    
+    
 }
 
 struct ContentView_Previews: PreviewProvider {

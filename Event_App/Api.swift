@@ -9,27 +9,36 @@ import Foundation
 
 func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     let urlString = "https://api.hel.fi/linkedevents/v1/event/"
-    guard let url = URL(string: urlString) else {
-        return completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
-    }
+    guard let url = URL(string: urlString) else { return }
 
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
-            print("Error fetching event data: \(error)")
+            print("Error fetching data: \(error)")
             completion(.failure(error))
             return
         }
         guard let data = data else {
-            print("No event data received")
+            print("No data received")
             completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
             return
         }
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
-            print("Event data received: \(response.data)")
+                print("Number of events fetched: \(response.data.count)")
+            
+           /* let response = try JSONDecoder().decode(EventResponse.self, from: data)*/
+            print("Data received: \(response.data)")
+            
+           /* let eventsWithLanguageName = response.data.filter { $0.name["fi"] != nil}
+            print("Events with Finnish name: \(eventsWithLanguageName.count)")
+
+            let uniqueEvents = removeDuplicateEvents(events: eventsWithLanguageName)
+            print("Unique events: \(uniqueEvents.count)")
+            
+            completion(.success(uniqueEvents))*/
             completion(.success(response.data))
         } catch {
-            print("Error decoding event data: \(error)")
+            print("Error decoding data: \(error)")
             if let decodingError = error as? DecodingError {
                 print(decodingError)
             }
@@ -39,26 +48,21 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     task.resume()
 }
 
-func fetchEventImage(forEvent event: Event, completion: @escaping (Result<Data, Error>) -> Void) {
-    let imageURLString = "https://api.hel.fi/linkedevents/v1/image/"
+func removeDuplicateEvents(events: [Event]) -> [Event] {
+    var uniqueEvents = [Event]()
+    var seenFinnishNames = Set<String>()
 
-    guard let imageURL = URL(string: imageURLString) else {
-        return completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
-    }
-    let task = URLSession.shared.dataTask(with: imageURL) { data, response, error in
-        if let error = error {
-            print("Error fetching image data: \(error)")
-            completion(.failure(error))
-            return
+    for event in events {
+            // Check if the event has a Finnish name
+            if let finnishName = event.name["fi"] {
+                // Add the event if its Finnish name hasn't been seen before
+                if !seenFinnishNames.contains(finnishName) {
+                    uniqueEvents.append(event)
+                    seenFinnishNames.insert(finnishName)
+            }
         }
-        guard let data = data else {
-            print("No image data received")
-            completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
-            return
-        }
-        completion(.success(data))
     }
-    task.resume()
+    return uniqueEvents
 }
 
 struct EventResponse: Codable {
@@ -68,21 +72,25 @@ struct EventResponse: Codable {
 struct Event: Identifiable, Codable {
     let id: String
     let name: LocalizedString
-    let imageURL: String?
-    var imageData: Data?
-
+    let images: [EventImage]
+    
     enum CodingKeys: String, CodingKey {
         case id
         case name
-        case imageURL = "image_url"
+        case images
     }
+}
+
+struct EventImage: Codable {
+    let url: String
 }
 
 typealias LocalizedString = [String: String]
 
 // Helper function to get the first available translation
 extension LocalizedString {
-    func nameInAnyLanguage() -> String {
-        return self.values.first ?? "Unnamed Event"
+    func nameInLanguage() -> String {
+        return self["fi"] ?? "Unnamed Event"
     }
 }
+
