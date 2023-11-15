@@ -1,67 +1,61 @@
-//import SwiftUI
-//
-//struct ContentView2: View {
-//    @State private var events: [Event] = []
-//    @State private var isLoading = false
-//    @State private var errorMessage: String?
-//    
-//    var body: some View {
-//        NavigationView {
-//            List {
-//                if isLoading {
-//                    Text("Loading...")
-//                } else if let errorMessage = errorMessage {
-//                    Text("Error: \(errorMessage)")
-//                } else {
-//                    ForEach(events) { event in
-//                    VStack(alignment: .leading) {
-//                        Text(event.name.nameInLanguage())
-//                            .font(.headline)
-//                        
-//                        if let imageUrl = event.images.first?.url,
-//                           let encodedUrlString = imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-//                           let url = URL(string: encodedUrlString) {
-//                            AsyncImage(url: url) { phase in
-//                                switch phase {
-//                                case .empty:
-//                                    ProgressView()
-//                                case .success(let image):
-//                                    image
-//                                        .resizable()
-//                                        .scaledToFit()
-//                                case .failure:
-//                                    Text("Image not available") // Display a text view in case of failure
-//                                @unknown default:
-//                                    EmptyView() // Fallback to an empty view for any unknown case
-//                                }
-//                            }
-//                            .frame(height: 200)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        .onAppear {
-//            isLoading = true
-//                  fetchEventData { result in
-//                      DispatchQueue.main.async {
-//                          isLoading = false
-//                          switch result {
-//                          case .success(let fetchedEvents):
-//                              self.events = removeDuplicateEvents(events: fetchedEvents)
-//                          case .failure(let error):
-//                              self.errorMessage = error.localizedDescription
-//                        }
-//                    }
-//                }
-//            }
-//            .navigationBarTitle("Events")
-//        }
-//    }
-//}
-//
-//struct ContentView2_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView2()
-//    }
-//}
+import SwiftUI
+
+
+struct ContentView2: View {
+    private var listOfEvents: [Event] = []
+    @State var searchText = ""
+    @State private var showMenu: Bool = false
+    
+    var body: some View {
+        NavigationView {
+            ZStack{
+                VStack{
+                    EventCardView()
+                        .navigationBarTitle("Main page", displayMode: .inline)
+                }
+                GeometryReader { _ in
+                    HStack {
+                        Spacer()
+                        SideMenuView()
+                            .offset(x: showMenu ? 0 : UIScreen.main.bounds.width)
+                    }
+                }
+                .background(Color.black.opacity(showMenu ? 0.5 : 0))
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                Button{
+                    self.showMenu.toggle()
+                }label: {
+                    if showMenu {
+                        Image(systemName: "xmark")
+                            .font(.title)
+                            .foregroundColor(.blue)
+                    }else {
+                        Image(systemName: "text.justify")
+                            .font(.title)
+                            .foregroundColor(.black)
+                    }
+                }
+            }
+        }
+        .searchable(text: $searchText)
+    }
+    
+    
+    //    var events: [Event] {
+    //        let lcEvents = listOfEvents.map { $0.nameInLanguage().lowercased() }
+    //
+    //        return searchText.isEmpty ? listOfEvents : listOfEvents.filter {
+    //            $0.nameInLanguage().lowercased().contains(searchText.lowercased())
+    //        }
+    //    }
+    
+    
+}
+
+struct ContentView2_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
