@@ -10,9 +10,22 @@ import SwiftUI
 struct SideMenuView: View {
     var body: some View {
         VStack{
-            Text("jotain")
-                .font(.title)
-                .foregroundColor(.white)
+            VStack{
+                NavigationLink(destination: SettingsView()){
+                    Text("Asetukset")
+                        .font(.title)
+                        .foregroundColor(.blue)
+                }
+            }
+            Divider()
+                .frame(width: 200, height: 2)
+                .background(Color.white)
+                .padding(.horizontal, 16)
+            VStack{
+                Text("jotain")
+                    .font(.title)
+                    .foregroundColor(.blue)
+            }
             Spacer()
         }
         .padding(15)
