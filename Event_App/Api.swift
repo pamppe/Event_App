@@ -72,11 +72,15 @@ struct EventResponse: Codable {
 struct Event: Identifiable, Codable {
     let id: String
     let name: LocalizedString
+    let description: LocalizedString
+    let location: LocalizedString
     let images: [EventImage]
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
+        case description
+        case location
         case images
     }
 }

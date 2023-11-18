@@ -21,9 +21,11 @@ struct EventCardView: View {
                 Text("Error: \(errorMessage)")
             } else {
                 List(events) { event in
-                    VStack(alignment: .leading) {
-                        CardView(event: event)
-                            .padding()
+                    NavigationLink(destination: DetailView(event: event)) {
+                        VStack(alignment: .leading) {
+                            CardView(event: event)
+                                .padding()
+                        }
                     }
                 }
             }
