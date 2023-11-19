@@ -34,13 +34,14 @@ struct DetailCardView: View {
                         .frame(height: 200)
                     }
                 }
-
                 Text("Event Name: \(event.name.nameInLanguage())")
                 Text("Event ID: \(event.id)")
-                Text("Description: \(event.description.nameInLanguage())")
-                Text("Location: \(event.location.nameInLanguage())")
-
-                // Display other details based on your Event model properties
+                Text("Description: \(event.sanitizedDescription())")
+                if let streetAddress = event.location.street_address?["fi"], !streetAddress.isEmpty {
+                    Text("Street Address: \(streetAddress)")
+                } else {
+                    Text("Street Address not available")
+                }
             }
         }
     }
@@ -48,6 +49,20 @@ struct DetailCardView: View {
 
 struct DetailCardView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailCardView(event: Event(id: "1", name: ["fi": "Sample Event"], description: ["fi": "Sample Description"], location: ["fi": "Sample Location"], images: []))
+        let sampleLocation = Place(
+            street_address: ["fi": "Sample Street Address"]
+            // Add other location properties as needed
+        )
+
+        let sampleEvent = Event(
+            id: "1",
+            name: ["fi": "Sample Event"],
+            description: ["fi": "Sample Description"],
+            location: sampleLocation,
+            images: []
+        )
+
+        return DetailCardView(event: sampleEvent)
     }
 }
+

@@ -47,11 +47,11 @@
 		6A6A89392B026865001B821D /* views */ = {
 			isa = PBXGroup;
 			children = (
-				6A6A893A2B026905001B821D /* EventCardView.swift */,
 				6AD03EF82AFD03D90028A6A3 /* ContentView.swift */,
 				6AD03F042AFED3E80028A6A3 /* ContentView2.swift */,
-				6A6A893C2B027331001B821D /* DetailView.swift */,
+				6A6A893A2B026905001B821D /* EventCardView.swift */,
 				6ACC565C2B03D5E6000DF8D6 /* SideMenuView.swift */,
+				6A6A893C2B027331001B821D /* DetailView.swift */,
 				6ABF94422B094233004FDD89 /* DetailCardView.swift */,
 			);
 			path = views;

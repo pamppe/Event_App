@@ -24,8 +24,19 @@ struct DetailView: View {
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            DetailView(event: Event(id: "1", name: ["fi": "Sample Event"], description: ["fi": "Sample Description"], location: ["fi": "Sample Location"], images: []))
-        }
+        let sampleLocation = Place(
+            street_address: ["fi": "Sample Street Address"]
+            // Add other location properties as needed
+        )
+
+        let sampleEvent = Event(
+            id: "1",
+            name: ["fi": "Sample Event"],
+            description: ["fi": "Sample Description"],
+            location: sampleLocation,
+            images: []
+        )
+
+        return DetailCardView(event: sampleEvent)
     }
 }

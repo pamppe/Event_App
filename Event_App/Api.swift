@@ -22,6 +22,14 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
             return
         }
+        // Print the raw JSON response for debugging
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: try JSONSerialization.jsonObject(with: data), options: .prettyPrinted)
+                    let jsonString = String(data: jsonData, encoding: .utf8)
+                    print("Raw JSON Response: \(jsonString ?? "Unable to convert to JSON string")")
+                } catch {
+                    print("Error converting JSON data to string: \(error)")
+                }
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
                 print("Number of events fetched: \(response.data.count)")
@@ -73,7 +81,7 @@ struct Event: Identifiable, Codable {
     let id: String
     let name: LocalizedString
     let description: LocalizedString
-    let location: LocalizedString
+    let location: Place
     let images: [EventImage]
 
     enum CodingKeys: String, CodingKey {
@@ -83,7 +91,35 @@ struct Event: Identifiable, Codable {
         case location
         case images
     }
+    // Helper function to sanitize HTML content
+        func sanitizedDescription() -> String {
+            guard let htmlString = description["fi"] else {
+                return "No description available"
+            }
+
+            do {
+                if let data = htmlString.data(using: .utf8) {
+                    let attributedString = try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
+                    return attributedString.string
+                } else {
+                    return "Error converting HTML to plain text"
+                }
+            } catch {
+                print("Error converting HTML to plain text: \(error)")
+                return "Error loading description"
+            }
+        }
 }
+
+
+struct Place: Codable {
+    let street_address: LocalizedString?
+
+    enum CodingKeys: String, CodingKey {
+        case street_address
+    }
+}
+
 
 struct EventImage: Codable {
     let url: String
