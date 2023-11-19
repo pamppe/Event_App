@@ -23,20 +23,24 @@ struct DetailView: View {
 }
 
 struct DetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleLocation = Place(
-            street_address: ["fi": "Sample Street Address"]
-            // Add other location properties as needed
-        )
+        static var previews: some View {
+            let samplePosition = GeoPosition(coordinates: [12.34, 56.78], type: "Point")
 
-        let sampleEvent = Event(
-            id: "1",
-            name: ["fi": "Sample Event"],
-            description: ["fi": "Sample Description"],
-            location: sampleLocation,
-            images: []
-        )
+            let sampleLocation = Place(
+                street_address: ["fi": "Sample Street Address"],
+                position: samplePosition
+                // Add other location properties as needed
+            )
 
-        return DetailCardView(event: sampleEvent)
+            let sampleEvent = Event(
+                id: "1",
+                name: ["fi": "Sample Event"],
+                description: ["fi": "Sample Description"],
+                location: sampleLocation,
+                images: []
+            )
+
+            return DetailCardView(event: sampleEvent)
+        }
     }
-}
+

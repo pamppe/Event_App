@@ -42,6 +42,15 @@ struct DetailCardView: View {
                 } else {
                     Text("Street Address not available")
                 }
+                if let geoPosition = event.location.position {
+                    let latitude = geoPosition.coordinates[0]
+                    let longitude = geoPosition.coordinates[1]
+                    // Use latitude and longitude as needed
+                    Text("Latitude: \(latitude), Longitude: \(longitude)")
+                } else {
+                    Text("Position information not available")
+                }
+
             }
         }
     }
@@ -49,8 +58,11 @@ struct DetailCardView: View {
 
 struct DetailCardView_Previews: PreviewProvider {
     static var previews: some View {
+        let samplePosition = GeoPosition(coordinates: [12.34, 56.78], type: "Point")
+
         let sampleLocation = Place(
-            street_address: ["fi": "Sample Street Address"]
+            street_address: ["fi": "Sample Street Address"],
+            position: samplePosition
             // Add other location properties as needed
         )
 
@@ -65,4 +77,5 @@ struct DetailCardView_Previews: PreviewProvider {
         return DetailCardView(event: sampleEvent)
     }
 }
+
 

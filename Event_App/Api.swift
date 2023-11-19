@@ -8,9 +8,16 @@
 import Foundation
 
 func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
-    let urlString = "https://api.hel.fi/linkedevents/v1/event/"
-    guard let url = URL(string: urlString) else { return }
-
+    var urlString = "https://api.hel.fi/linkedevents/v1/event/"
+    guard URL(string: urlString) != nil else { return }
+    
+    // Change HTTP to HTTPS
+        if let url = URL(string: urlString), url.scheme == "http" {
+            urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
+        }
+        
+        guard let url = URL(string: urlString) else { return }
+    
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
             print("Error fetching data: \(error)")
@@ -22,28 +29,30 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
             return
         }
+        
         // Print the raw JSON response for debugging
-                do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: try JSONSerialization.jsonObject(with: data), options: .prettyPrinted)
-                    let jsonString = String(data: jsonData, encoding: .utf8)
-                    print("Raw JSON Response: \(jsonString ?? "Unable to convert to JSON string")")
-                } catch {
-                    print("Error converting JSON data to string: \(error)")
-                }
+//        do {
+//            let jsonData = try JSONSerialization.data(withJSONObject: try JSONSerialization.jsonObject(with: data), options: .prettyPrinted)
+//            let jsonString = String(data: jsonData, encoding: .utf8)
+//            print("Raw JSON Response: \(jsonString ?? "Unable to convert to JSON string")")
+//        } catch {
+//            print("Error converting JSON data to string: \(error)")
+//        }
+        
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
-                print("Number of events fetched: \(response.data.count)")
+            print("Number of events fetched: \(response.data.count)")
             
-           /* let response = try JSONDecoder().decode(EventResponse.self, from: data)*/
+            /* let response = try JSONDecoder().decode(EventResponse.self, from: data)*/
             print("Data received: \(response.data)")
             
-           /* let eventsWithLanguageName = response.data.filter { $0.name["fi"] != nil}
-            print("Events with Finnish name: \(eventsWithLanguageName.count)")
-
-            let uniqueEvents = removeDuplicateEvents(events: eventsWithLanguageName)
-            print("Unique events: \(uniqueEvents.count)")
-            
-            completion(.success(uniqueEvents))*/
+            /* let eventsWithLanguageName = response.data.filter { $0.name["fi"] != nil}
+             print("Events with Finnish name: \(eventsWithLanguageName.count)")
+             
+             let uniqueEvents = removeDuplicateEvents(events: eventsWithLanguageName)
+             print("Unique events: \(uniqueEvents.count)")
+             
+             completion(.success(uniqueEvents))*/
             completion(.success(response.data))
         } catch {
             print("Error decoding data: \(error)")
@@ -59,14 +68,14 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
 func removeDuplicateEvents(events: [Event]) -> [Event] {
     var uniqueEvents = [Event]()
     var seenFinnishNames = Set<String>()
-
+    
     for event in events {
-            // Check if the event has a Finnish name
-            if let finnishName = event.name["fi"] {
-                // Add the event if its Finnish name hasn't been seen before
-                if !seenFinnishNames.contains(finnishName) {
-                    uniqueEvents.append(event)
-                    seenFinnishNames.insert(finnishName)
+        // Check if the event has a Finnish name
+        if let finnishName = event.name["fi"] {
+            // Add the event if its Finnish name hasn't been seen before
+            if !seenFinnishNames.contains(finnishName) {
+                uniqueEvents.append(event)
+                seenFinnishNames.insert(finnishName)
             }
         }
     }
@@ -83,7 +92,7 @@ struct Event: Identifiable, Codable {
     let description: LocalizedString
     let location: Place
     let images: [EventImage]
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -92,32 +101,39 @@ struct Event: Identifiable, Codable {
         case images
     }
     // Helper function to sanitize HTML content
-        func sanitizedDescription() -> String {
-            guard let htmlString = description["fi"] else {
-                return "No description available"
-            }
-
-            do {
-                if let data = htmlString.data(using: .utf8) {
-                    let attributedString = try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
-                    return attributedString.string
-                } else {
-                    return "Error converting HTML to plain text"
-                }
-            } catch {
-                print("Error converting HTML to plain text: \(error)")
-                return "Error loading description"
-            }
+    func sanitizedDescription() -> String {
+        guard let htmlString = description["fi"] else {
+            return "No description available"
         }
+        
+        do {
+            if let data = htmlString.data(using: .utf8) {
+                let attributedString = try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
+                return attributedString.string
+            } else {
+                return "Error converting HTML to plain text"
+            }
+        } catch {
+            print("Error converting HTML to plain text: \(error)")
+            return "Error loading description"
+        }
+    }
 }
 
 
 struct Place: Codable {
     let street_address: LocalizedString?
-
+    let position: GeoPosition?
+    
     enum CodingKeys: String, CodingKey {
         case street_address
+        case position
     }
+}
+
+struct GeoPosition: Codable {
+    let coordinates: [Double]
+    let type: String
 }
 
 
