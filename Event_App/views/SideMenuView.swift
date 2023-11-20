@@ -41,7 +41,7 @@ struct SideMenuView: View {
             }
             Spacer()
             VStack{
-                NavigationLink(destination:CategoriesView()){
+                NavigationLink(destination:InfoView()){
                     Text("Tietoa meistä")
                         .foregroundColor(.blue)
                 }
