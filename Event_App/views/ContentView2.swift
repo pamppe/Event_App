@@ -40,6 +40,7 @@ struct ContentView2: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
         .searchable(text: $searchText)
     }
     
