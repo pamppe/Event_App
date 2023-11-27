@@ -1,15 +1,143 @@
-//
-//  CategoriesView.swift
-//  Event_App
-//
-//  Created by iosdev on 20.11.2023.
-//
-
 import SwiftUI
 
-struct CategoriesView: View {
+// Define the Category struct with a color property for the background
+struct Category: Identifiable {
+    let id = UUID()
+    let name: String
+    let symbolName: String
+    let backgroundColor: Color
+    let iconColor: Color // Separate color for the icon
+}
+
+// Custom view for displaying a category
+struct CategoryView: View {
+    var category: Category
+    var width: CGFloat
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Image(systemName: category.symbolName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: width / 2, height: width / 2)
+                .foregroundColor(category.iconColor) // Icon color
+
+            Text(category.name)
+                .font(.headline)
+                .foregroundColor(.white) // Text color for better contrast
+        }
+        .frame(width: width)
+        .padding()
+        .background(category.backgroundColor) // Background color
+        .cornerRadius(20)
+    }
+}
+
+// The main view for displaying categories
+struct CategoriesView: View {
+    // List of categories with corresponding SF Symbols, background and icon colors
+    let categories = [
+        Category(name: "Musiikki", symbolName: "music.note", backgroundColor: .blue, iconColor: .white),
+        Category(name: "Urheilu", symbolName: "sportscourt", backgroundColor: .green, iconColor: .white),
+        Category(name: "Taide", symbolName: "paintpalette", backgroundColor: .purple, iconColor: .yellow),
+        Category(name: "Teatteri", symbolName: "theatermasks", backgroundColor: .red, iconColor: .black),
+        Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .black)
+    ]
+
+    @State private var searchQuery = ""
+
+    var body: some View {
+        NavigationView {
+            GeometryReader { geometry in
+                VStack {
+                    TextField("Etsi kategorioita", text: $searchQuery)
+                        .padding(7)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            ForEach(filteredCategories) { category in
+                                NavigationLink(destination: EventListView(category: category)) {
+                                    CategoryView(category: category, width: geometry.size.width - 40)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                }
+            }
+            .navigationBarTitle("Kategoriat")
+        }
+    }
+
+    var filteredCategories: [Category] {
+        if searchQuery.isEmpty {
+            return categories
+        } else {
+            return categories.filter { $0.name.localizedCaseInsensitiveContains(searchQuery) }
+        }
+    }
+}
+
+struct EventListView: View {
+    var category: Category
+    @State private var events = [Event]() // Use your existing Event struct
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        VStack {
+            if isLoading {
+                ProgressView("Loading...")
+            } else if let errorMessage = errorMessage {
+                Text("Error: \(errorMessage)")
+            } else {
+                List(events, id: \.id) { event in
+                    VStack(alignment: .leading) {
+                        Text(event.name.nameInLanguage()) // Modify as needed based on your Event struct
+                            .fontWeight(.bold)
+                    }
+                }
+            }
+        }
+        .navigationTitle(category.name)
+        .onAppear {
+            fetchEventsForCategory(category)
+        }
+    }
+
+    func fetchEventsForCategory(_ category: Category) {
+        isLoading = true
+        let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let urlString = "https://api.hel.fi/linkedevents/v1/event/?combined_text=\(searchString)"
+        
+        guard let url = URL(string: urlString) else {
+            errorMessage = "Invalid URL"
+            isLoading = false
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            DispatchQueue.main.async {
+                isLoading = false
+                if let error = error {
+                    self.errorMessage = "Failed to fetch data: \(error.localizedDescription)"
+                    return
+                }
+                guard let data = data else {
+                    self.errorMessage = "No data received"
+                    return
+                }
+                do {
+                    let response = try JSONDecoder().decode(EventResponse.self, from: data)
+                    self.events = response.data // Ensure this matches the structure of EventResponse
+                } catch {
+                    self.errorMessage = "Error decoding data: \(error.localizedDescription)"
+                }
+            }
+        }.resume()
     }
 }
 
@@ -18,3 +146,12 @@ struct CategoriesView_Previews: PreviewProvider {
         CategoriesView()
     }
 }
+
+// Extension to handle localized strings (modify as needed)
+//extension LocalizedString {
+//    func nameInLanguage() -> String {
+ //       return self["fi"] ?? "Unnamed Event"
+//    }
+//}
+
+// Make sure Event and EventResponse structs are defined elsewhere in your project.
