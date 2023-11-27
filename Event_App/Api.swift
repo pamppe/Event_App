@@ -12,11 +12,11 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     guard URL(string: urlString) != nil else { return }
     
     // Change HTTP to HTTPS
-        if let url = URL(string: urlString), url.scheme == "http" {
-            urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
-        }
-        
-        guard let url = URL(string: urlString) else { return }
+    if let url = URL(string: urlString), url.scheme == "http" {
+        urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
+    }
+    
+    guard let url = URL(string: urlString) else { return }
     
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
@@ -30,40 +30,78 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             return
         }
         
-        // Print the raw JSON response for debugging
-//        do {
-//            let jsonData = try JSONSerialization.data(withJSONObject: try JSONSerialization.jsonObject(with: data), options: .prettyPrinted)
-//            let jsonString = String(data: jsonData, encoding: .utf8)
-//            print("Raw JSON Response: \(jsonString ?? "Unable to convert to JSON string")")
-//        } catch {
-//            print("Error converting JSON data to string: \(error)")
-//        }
-        
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
             print("Number of events fetched: \(response.data.count)")
             
-            /* let response = try JSONDecoder().decode(EventResponse.self, from: data)*/
-            print("Data received: \(response.data)")
-            
-            /* let eventsWithLanguageName = response.data.filter { $0.name["fi"] != nil}
-             print("Events with Finnish name: \(eventsWithLanguageName.count)")
-             
-             let uniqueEvents = removeDuplicateEvents(events: eventsWithLanguageName)
-             print("Unique events: \(uniqueEvents.count)")
-             
-             completion(.success(uniqueEvents))*/
-            completion(.success(response.data))
         } catch {
             print("Error decoding data: \(error)")
-            if let decodingError = error as? DecodingError {
-                print(decodingError)
-            }
             completion(.failure(error))
         }
+        
+                do {
+                    let response = try JSONDecoder().decode(EventResponse.self, from: data)
+                    print("Number of events fetched: \(response.data.count)")
+                    print(response.data)
+                    /* let response = try JSONDecoder().decode(EventResponse.self, from: data)*/
+                    //print("Data received: \(response.data)")
+        
+                    /* let eventsWithLanguageName = response.data.filter { $0.name["fi"] != nil}
+                     print("Events with Finnish name: \(eventsWithLanguageName.count)")
+        
+                     let uniqueEvents = removeDuplicateEvents(events: eventsWithLanguageName)
+                     print("Unique events: \(uniqueEvents.count)")
+        
+                     completion(.success(uniqueEvents))*/
+                    completion(.success(response.data))
+                } catch {
+                    print("Error decoding data: \(error)")
+                    if let decodingError = error as? DecodingError {
+                        print(decodingError)
+                    }
+                    completion(.failure(error))
+                }
     }
     task.resume()
 }
+
+
+func fetchLocation(placeID: String, completion: @escaping (Result<Place, Error>) -> Void) {
+    let urlString = "https://api.hel.fi/linkedevents/v1/place/\(placeID)"
+    
+    guard let url = URL(string: urlString) else {
+        completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
+        return
+    }
+    
+    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        if let error = error {
+            print("Error fetching data: \(error)")
+            completion(.failure(error))
+            return
+        }
+        guard let data = data else {
+            print("No data received")
+            completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
+            return
+        }
+        
+        do {
+            let place = try JSONDecoder().decode(Place.self, from: data)
+            completion(.success(place))
+        } catch {
+            print("Error decoding data: \(error)")
+            completion(.failure(error))
+        }
+    }
+    
+    task.resume()
+}
+
+
+
+
+
 
 func removeDuplicateEvents(events: [Event]) -> [Event] {
     var uniqueEvents = [Event]()
@@ -100,6 +138,17 @@ struct Event: Identifiable, Codable {
         case location
         case images
     }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+
+        if let firstLanguage = description.keys.first, let descriptionText = description[firstLanguage] {
+            try container.encode([firstLanguage: descriptionText], forKey: .description)
+        }
+        try container.encode(location, forKey: .location)
+
+    }
     // Helper function to sanitize HTML content
     func sanitizedDescription() -> String {
         guard let htmlString = description["fi"] else {
@@ -122,12 +171,24 @@ struct Event: Identifiable, Codable {
 
 
 struct Place: Codable {
-    let street_address: LocalizedString?
+    let streetAddress: LocalizedString?
     let position: GeoPosition?
     
     enum CodingKeys: String, CodingKey {
-        case street_address
+        case streetAddress
         case position
+    }
+
+    init(streetAddress: LocalizedString?, position: GeoPosition?) {
+        self.streetAddress = streetAddress
+        self.position = position
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(streetAddress, forKey: .streetAddress)
+        try container.encode(position, forKey: .position)
     }
 }
 

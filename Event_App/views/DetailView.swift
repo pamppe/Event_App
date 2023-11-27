@@ -8,39 +8,48 @@
 import SwiftUI
 
 struct DetailView: View {
+    @State private var fetchedPlace: Place?
     var event: Event
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                VStack {
-                    DetailCardView(event: event)
-                        .navigationBarTitle("Event Details", displayMode: .inline)
-                }
+        VStack {
+            if let place = fetchedPlace {
+                DetailCardView(event: event, place: place)
+            } else {
+                Text("Loading...")
+                    .onAppear {
+                        fetchLocation(placeID: event.id) { result in
+                            switch result {
+                            case .success(let place):
+                                self.fetchedPlace = place
+                            case .failure(let error):
+                                print("Error: \(error)")
+                            }
+                        }
+                    }
             }
         }
     }
 }
 
 struct DetailView_Previews: PreviewProvider {
-        static var previews: some View {
-            let samplePosition = GeoPosition(coordinates: [12.34, 56.78], type: "Point")
+    static var previews: some View {
+        let samplePosition = GeoPosition(coordinates: [12.34, 56.78], type: "Point")
 
-            let sampleLocation = Place(
-                street_address: ["fi": "Sample Street Address"],
-                position: samplePosition
-                // Add other location properties as needed
-            )
+        let sampleLocation = Place(
+            streetAddress: ["fi": "Sample Street Address"],
+            position: samplePosition
+            // Add other location properties as needed
+        )
 
-            let sampleEvent = Event(
-                id: "1",
-                name: ["fi": "Sample Event"],
-                description: ["fi": "Sample Description"],
-                location: sampleLocation,
-                images: []
-            )
+        let sampleEvent = Event(
+            id: "1",
+            name: ["fi": "Sample Event"],
+            description: ["fi": "Sample Description"],
+            location: sampleLocation,
+            images: []
+        )
 
-            return DetailCardView(event: sampleEvent)
-        }
+        return DetailView(event: sampleEvent)
     }
-
+}

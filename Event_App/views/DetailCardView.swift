@@ -9,7 +9,8 @@ import SwiftUI
 
 struct DetailCardView: View {
     var event: Event
-
+    var place: Place
+    
     var body: some View {
         VStack {
             List {
@@ -37,20 +38,16 @@ struct DetailCardView: View {
                 Text("Event Name: \(event.name.nameInLanguage())")
                 Text("Event ID: \(event.id)")
                 Text("Description: \(event.sanitizedDescription())")
-                if let streetAddress = event.location.street_address?["fi"], !streetAddress.isEmpty {
+               
+                if let streetAddress = place.streetAddress?["fi"], !streetAddress.isEmpty {
                     Text("Street Address: \(streetAddress)")
                 } else {
                     Text("Street Address not available")
                 }
-                if let geoPosition = event.location.position {
-                    let latitude = geoPosition.coordinates[0]
-                    let longitude = geoPosition.coordinates[1]
-                    // Use latitude and longitude as needed
-                    Text("Latitude: \(latitude), Longitude: \(longitude)")
-                } else {
-                    Text("Position information not available")
-                }
-
+                Text("Latitude: \(place.position?.coordinates[1] ?? 0.0)")
+                Text("Longitude: \(place.position?.coordinates[0] ?? 0.0)")
+                
+                
             }
         }
     }
@@ -61,7 +58,7 @@ struct DetailCardView_Previews: PreviewProvider {
         let samplePosition = GeoPosition(coordinates: [12.34, 56.78], type: "Point")
 
         let sampleLocation = Place(
-            street_address: ["fi": "Sample Street Address"],
+            streetAddress: ["fi": "Sample Street Address"],
             position: samplePosition
             // Add other location properties as needed
         )
@@ -74,7 +71,7 @@ struct DetailCardView_Previews: PreviewProvider {
             images: []
         )
 
-        return DetailCardView(event: sampleEvent)
+        return DetailView(event: sampleEvent)
     }
 }
 
