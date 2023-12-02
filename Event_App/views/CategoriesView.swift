@@ -44,36 +44,49 @@ struct CategoriesView: View {
         Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .black)
     ]
     
-    @State private var searchQuery = ""
+    
     @StateObject var speechRecognizer = SpeechRecognizer()
     @State var isRecording = false
+    @State private var searchQuery = ""
+    @State private var searchQueryFromSpeech = ""
+    @State private var textFieldText = ""
     
     
+    // Function to update searchQuery based on both text input and speech recognition
+    func updateSearchQuery() {
+        if !searchQueryFromSpeech.isEmpty {
+            searchQuery = searchQueryFromSpeech
+        }
+    }
     var body: some View {
-        NavigationView {
-            GeometryReader { geometry in
-                VStack {
-                    HStack {
-                        Button(action: {
-                            if isRecording {
-                                stopRecord()
-                            } else {
-                                startRecord()
+            NavigationView {
+                GeometryReader { geometry in
+                    VStack {
+                        HStack {
+                            Button(action: {
+                                if isRecording {
+                                    stopRecord()
+                                } else {
+                                    startRecord()
+                                }
+                            }) {
+                                Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(isRecording ? .red : .blue)
                             }
-                        }) {
-                            Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(isRecording ? .red : .blue)
+
+                            TextField("Etsi kategorioita", text: $searchQuery)
+                                .padding(7)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
+                                .textFieldStyle(RoundedBorderTextFieldStyle()) // Optional: Apply a specific style
                         }
-                        
-                        TextField("Etsi kategorioita", text: $searchQuery)
-                            .padding(7)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(10)
-                    }
-                    
+                        .onChange(of: speechRecognizer.transcript) { newTranscript in
+                            searchQueryFromSpeech = newTranscript
+                            updateSearchQuery()
+                        }
                     ScrollView {
                         VStack(spacing: 20) {
                             ForEach(filteredCategories) { category in
