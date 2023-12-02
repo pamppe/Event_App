@@ -13,7 +13,7 @@ struct Category: Identifiable {
 struct CategoryView: View {
     var category: Category
     var width: CGFloat
-
+    
     var body: some View {
         VStack {
             Image(systemName: category.symbolName)
@@ -21,7 +21,7 @@ struct CategoryView: View {
                 .scaledToFit()
                 .frame(width: width / 2, height: width / 2)
                 .foregroundColor(category.iconColor) // Icon color
-
+            
             Text(category.name)
                 .font(.headline)
                 .foregroundColor(.white) // Text color for better contrast
@@ -43,19 +43,37 @@ struct CategoriesView: View {
         Category(name: "Teatteri", symbolName: "theatermasks", backgroundColor: .red, iconColor: .black),
         Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .black)
     ]
-
+    
     @State private var searchQuery = ""
-
+    @StateObject var speechRecognizer = SpeechRecognizer()
+    @State var isRecording = false
+    
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
                 VStack {
-                    TextField("Etsi kategorioita", text: $searchQuery)
-                        .padding(7)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-
+                    HStack {
+                        Button(action: {
+                            if isRecording {
+                                stopRecord()
+                            } else {
+                                startRecord()
+                            }
+                        }) {
+                            Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(isRecording ? .red : .blue)
+                        }
+                        
+                        TextField("Etsi kategorioita", text: $searchQuery)
+                            .padding(7)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(10)
+                    }
+                    
                     ScrollView {
                         VStack(spacing: 20) {
                             ForEach(filteredCategories) { category in
@@ -71,7 +89,17 @@ struct CategoriesView: View {
             .navigationBarTitle("Kategoriat")
         }
     }
-
+    func startRecord(){
+        speechRecognizer.resetTranscript()
+        speechRecognizer.startTranscribing()
+        isRecording = true
+    }
+    func stopRecord(){
+        speechRecognizer.stopTranscribing()
+        isRecording = false
+    }
+    
+    
     var filteredCategories: [Category] {
         if searchQuery.isEmpty {
             return categories
@@ -86,7 +114,7 @@ struct EventListView: View {
     @State private var events = [Event]() // Use your existing Event struct
     @State private var isLoading = false
     @State private var errorMessage: String?
-
+    
     var body: some View {
         VStack {
             if isLoading {
@@ -107,7 +135,7 @@ struct EventListView: View {
             fetchEventsForCategory(category)
         }
     }
-
+    
     func fetchEventsForCategory(_ category: Category) {
         isLoading = true
         let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -118,7 +146,7 @@ struct EventListView: View {
             isLoading = false
             return
         }
-
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             DispatchQueue.main.async {
                 isLoading = false
@@ -150,7 +178,7 @@ struct CategoriesView_Previews: PreviewProvider {
 // Extension to handle localized strings (modify as needed)
 //extension LocalizedString {
 //    func nameInLanguage() -> String {
- //       return self["fi"] ?? "Unnamed Event"
+//       return self["fi"] ?? "Unnamed Event"
 //    }
 //}
 
