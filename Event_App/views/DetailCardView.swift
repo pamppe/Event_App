@@ -38,17 +38,17 @@ struct DetailCardView: View {
                 Text("Description: \(event.sanitizedDescription())")
                 Text("Link to Event \(event.info_url?.nameInLanguage() ?? "N/A")")                
                 // Display location information
-                Section(header: Text("Location")) {
-                    if event.id == event.id {
-                        VStack(alignment: .leading) {
-                            Text("Event ID: \(event.id)")
-                            Text("Coordinates: \(event.location.position.coordinates.map { "\($0)" }.joined(separator: ", "))")
-                            Text("Location Type: \(event.location.position.type)")
-                        }
-                    } else {
-                        Text("No location information available")
-                    }
-                }
+//                Section(header: Text("Location")) {
+//                    if event.id == event.id {
+//                        VStack(alignment: .leading) {
+//                            Text("Event ID: \(event.id)")
+//                            Text("Coordinates: \(event.location.position.coordinates.map { "\($0)" }.joined(separator: ", "))")
+//                            Text("Location Type: \(event.location.position.type)")
+//                        }
+//                    } else {
+//                        Text("No location information available")
+//                    }
+//                }
             }
         }
     }
@@ -61,8 +61,8 @@ struct DetailCardView_Previews: PreviewProvider {
             name: ["fi": "Sample Event"],
             description: ["fi": "Sample Description"],
             info_url: ["fi": "Sample Link"],
-            images: [],
-            location: Place(position: Position(coordinates: [12.34, 56.78, 40.30, 12.39], type: "String"))
+            images: []//,
+            //location: EventLocation(position: Position(coordinates: [12.34, 56.78, 40.30, 12.39], type: "String"))
         )
 
         return DetailCardView(event: sampleEvent)

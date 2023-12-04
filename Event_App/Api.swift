@@ -9,19 +9,14 @@ import Foundation
 
 func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     var urlString = "https://api.hel.fi/linkedevents/v1/event/"
-    
-    //let urlLocation = "https://api.hel.fi/linkedevents/v1/event/?location=\(locationId)"
+    guard URL(string: urlString) != nil else { return }
     
     // Change HTTP to HTTPS
-    if let url = URL(string: urlString), url.scheme == "http" {
-        urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
-    }
-    
-    // No need to guard against nil here, as we are force-unwrapping later
-    guard let url = URL(string: urlString) else {
-        completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
-        return
-    }
+        if let url = URL(string: urlString), url.scheme == "http" {
+            urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
+        }
+        
+        guard let url = URL(string: urlString) else { return }
     
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
@@ -34,20 +29,22 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
             return
         }
-        do {
-            let decoder = JSONDecoder()
-            let response = try decoder.decode(EventResponse.self, from: data)
-            completion(.success(response.data))
-        } catch {
-            print("Error decoding data: \(error)")
-            completion(.failure(error))
-        }
+        
+        // Print the raw JSON response for debugging
+//        do {
+//            let jsonData = try JSONSerialization.data(withJSONObject: try JSONSerialization.jsonObject(with: data), options: .prettyPrinted)
+//            let jsonString = String(data: jsonData, encoding: .utf8)
+//            print("Raw JSON Response: \(jsonString ?? "Unable to convert to JSON string")")
+//        } catch {
+//            print("Error converting JSON data to string: \(error)")
+//        }
+        
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
             print("Number of events fetched: \(response.data.count)")
-            print(response.data)
+            
             /* let response = try JSONDecoder().decode(EventResponse.self, from: data)*/
-            //print("Data received: \(response.data)")
+            print("Data received: \(response.data)")
             
             /* let eventsWithLanguageName = response.data.filter { $0.name["fi"] != nil}
              print("Events with Finnish name: \(eventsWithLanguageName.count)")
@@ -59,23 +56,15 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             completion(.success(response.data))
         } catch {
             print("Error decoding data: \(error)")
+            if let decodingError = error as? DecodingError {
+                print(decodingError)
+            }
             completion(.failure(error))
         }
     }
     task.resume()
 }
 
-
-func fetchLocation(eventID: String, completion: @escaping (Result<Place, Error>) -> Void) {
-    // Implement your logic to fetch the location based on the eventID
-    // ...
-    
-    // For the sake of example, let's create a dummy Place
-    let dummyPlace = Place(position:Position(coordinates: [0, 0], type: "dummy"))
-    
-    // Call the completion handler with the result
-    completion(.success(dummyPlace))
-}
 
 func removeDuplicateEvents(events: [Event]) -> [Event] {
     var uniqueEvents = [Event]()
@@ -98,17 +87,82 @@ struct EventResponse: Codable {
     let data: [Event]
 }
 //--------Position----------------
-struct Place: Codable, Equatable{
-    let position: Position
-    
-    enum CodingKeys: String, CodingKey{
-        case position
-    }
-}
-struct Position: Codable, Equatable{
-    let coordinates: [Double]
-    let type: String
-}
+//func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
+//    let urlString = "https://api.hel.fi/linkedevents/v1/event/"
+//    guard let url = URL(string: urlString) else { return }
+//    
+//    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+//        if let error = error {
+//            print("Error fetching data: \(error)")
+//            completion(.failure(error))
+//            return
+//        }
+//        guard let data = data else {
+//            print("No data received")
+//            completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
+//            return
+//        }
+//        do {
+//            // Print the JSON data before decoding
+//            let jsonString = String(data: data, encoding: .utf8)
+//            print("JSON String: \(jsonString ?? "Invalid JSON")")
+//
+//            let response = try JSONDecoder().decode(EventResponse.self, from: data)
+//            print("Number of events fetched: \(response.data.count)")
+//
+//        } catch {
+//            print("Error decoding data: \(error)")
+//            if let decodingError = error as? DecodingError {
+//                print(decodingError)
+//            }
+//            completion(.failure(error))
+//        }
+//    }
+//    task.resume()
+//}
+//func fetchLocation(eventID: String, completion: @escaping (Result<Place, Error>) -> Void) {
+//    // Implement your logic to fetch the location based on the eventID
+//    // ...
+//
+//    // For the sake of example, let's create a dummy Place
+//    let dummyPlace = Place(position:Position(coordinates: [0, 0], type: "dummy"))
+//
+//    // Call the completion handler with the result
+//    completion(.success(dummyPlace))
+//}
+//struct Place: Codable, Equatable{
+//    let position: Position
+//
+//    enum CodingKeys: String, CodingKey{
+//        case position
+//    }
+//}
+//struct Position: Codable, Equatable{
+//    let coordinates: [Double]
+//    let type: String
+//
+//    enum CodingKeys: String, CodingKey{
+//        case coordinates
+//        case type
+//    }
+//}
+//struct EventLocation: Codable {
+//    let position: Position
+//
+//    enum CodingKeys: String, CodingKey {
+//        case position
+//    }
+//}
+//struct Position: Codable {
+//    let coordinates: [Double]
+//    let type: String
+//
+//    enum CodingKeys: String, CodingKey {
+//        case coordinates
+//        case type
+//    }
+//}
+
 //------Position end---------------
 struct EventImage: Codable {
     let url: String
@@ -120,7 +174,7 @@ struct Event: Identifiable, Codable {
     let description: LocalizedString
     let info_url: LocalizedString?
     let images: [EventImage]
-    let location: Place
+    //let location: EventLocation
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -128,7 +182,7 @@ struct Event: Identifiable, Codable {
         case description
         case info_url
         case images
-        case location
+        //case location
     }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
