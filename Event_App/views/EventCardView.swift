@@ -20,7 +20,7 @@ struct EventCardView: View {
                 Text("Error: \(errorMessage)")
             } else {
                 List(events) { event in
-                    NavigationLink(destination: DetailView(event: event)){
+                    NavigationLink(destination: DetailView(event: event, place: event.location ?? Place(/*id: "1",*/ street_address: ["fi": "Sample address"]))){
                         VStack(alignment: .leading) {
                             CardView(event: event)
                                 .padding()

@@ -7,6 +7,8 @@
 
 import Foundation
 
+//--------------------------Func-------------------------------------
+                        //Event
 func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     var urlString = "https://api.hel.fi/linkedevents/v1/event/"
     guard URL(string: urlString) != nil else { return }
@@ -15,9 +17,7 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
         if let url = URL(string: urlString), url.scheme == "http" {
             urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
         }
-        
         guard let url = URL(string: urlString) else { return }
-    
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
             print("Error fetching data: \(error)")
@@ -42,17 +42,7 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
             print("Number of events fetched: \(response.data.count)")
-            
-            /* let response = try JSONDecoder().decode(EventResponse.self, from: data)*/
             print("Data received: \(response.data)")
-            
-            /* let eventsWithLanguageName = response.data.filter { $0.name["fi"] != nil}
-             print("Events with Finnish name: \(eventsWithLanguageName.count)")
-             
-             let uniqueEvents = removeDuplicateEvents(events: eventsWithLanguageName)
-             print("Unique events: \(uniqueEvents.count)")
-             
-             completion(.success(uniqueEvents))*/
             completion(.success(response.data))
         } catch {
             print("Error decoding data: \(error)")
@@ -66,6 +56,42 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
 }
 
 
+                            //Place
+func fetchEventLocation(completion: @escaping (Result<[Place], Error>) -> Void) {
+    let urlString = "https://api.hel.fi/linkedevents/v1/place/"
+    guard URL(string: urlString) != nil else { return }
+    
+    guard let url = URL(string: urlString) else { return }
+    
+    let ptask = URLSession.shared.dataTask(with: url) { pData, pResponse, error in
+        if let error = error {
+            print("Error fetching data: \(error)")
+            completion(.failure(error))
+            return
+        }
+        guard let pData = pData else {
+            print("No data received")
+            completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
+            return
+        }
+        do {
+            let response = try JSONDecoder().decode(PlaceResponse.self, from: pData)
+            print("Number of events fetched: \(response.pData.count)")
+            print("Data received: \(response.pData)")
+            completion(.success(response.pData))
+        } catch {
+            print("Error decoding data: \(error)")
+            if let decodingError = error as? DecodingError {
+                print(decodingError)
+            }
+            completion(.failure(error))
+        }
+    }
+    ptask.resume()
+}
+
+
+                //Duplicate
 func removeDuplicateEvents(events: [Event]) -> [Event] {
     var uniqueEvents = [Event]()
     var seenFinnishNames = Set<String>()
@@ -82,99 +108,46 @@ func removeDuplicateEvents(events: [Event]) -> [Event] {
     }
     return uniqueEvents
 }
+//--------------------------Func end---------------------------------
 
+
+//--------------------------Place------------------------------------
+struct PlaceResponse: Codable {
+    let pData: [Place]
+}
+struct Place: Codable{
+    //var id: String
+    var street_address: LocalizedString?
+    
+    enum CodingKeys: String, CodingKey {
+        //case id
+        case street_address
+    }
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        //try container.encode(id, forKey: .id)
+        try container.encode(street_address, forKey: .street_address)
+        
+    }
+}
+
+//------------------------Place end--------------------------
+
+
+//------------------------Event------------------------------
 struct EventResponse: Codable {
     let data: [Event]
 }
-//--------Position----------------
-//func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
-//    let urlString = "https://api.hel.fi/linkedevents/v1/event/"
-//    guard let url = URL(string: urlString) else { return }
-//    
-//    let task = URLSession.shared.dataTask(with: url) { data, response, error in
-//        if let error = error {
-//            print("Error fetching data: \(error)")
-//            completion(.failure(error))
-//            return
-//        }
-//        guard let data = data else {
-//            print("No data received")
-//            completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
-//            return
-//        }
-//        do {
-//            // Print the JSON data before decoding
-//            let jsonString = String(data: data, encoding: .utf8)
-//            print("JSON String: \(jsonString ?? "Invalid JSON")")
-//
-//            let response = try JSONDecoder().decode(EventResponse.self, from: data)
-//            print("Number of events fetched: \(response.data.count)")
-//
-//        } catch {
-//            print("Error decoding data: \(error)")
-//            if let decodingError = error as? DecodingError {
-//                print(decodingError)
-//            }
-//            completion(.failure(error))
-//        }
-//    }
-//    task.resume()
-//}
-//func fetchLocation(eventID: String, completion: @escaping (Result<Place, Error>) -> Void) {
-//    // Implement your logic to fetch the location based on the eventID
-//    // ...
-//
-//    // For the sake of example, let's create a dummy Place
-//    let dummyPlace = Place(position:Position(coordinates: [0, 0], type: "dummy"))
-//
-//    // Call the completion handler with the result
-//    completion(.success(dummyPlace))
-//}
-//struct Place: Codable, Equatable{
-//    let position: Position
-//
-//    enum CodingKeys: String, CodingKey{
-//        case position
-//    }
-//}
-//struct Position: Codable, Equatable{
-//    let coordinates: [Double]
-//    let type: String
-//
-//    enum CodingKeys: String, CodingKey{
-//        case coordinates
-//        case type
-//    }
-//}
-//struct EventLocation: Codable {
-//    let position: Position
-//
-//    enum CodingKeys: String, CodingKey {
-//        case position
-//    }
-//}
-//struct Position: Codable {
-//    let coordinates: [Double]
-//    let type: String
-//
-//    enum CodingKeys: String, CodingKey {
-//        case coordinates
-//        case type
-//    }
-//}
-
-//------Position end---------------
 struct EventImage: Codable {
     let url: String
 }
-
 struct Event: Identifiable, Codable {
     let id: String
     let name: LocalizedString
     let description: LocalizedString
     let info_url: LocalizedString?
     let images: [EventImage]
-    //let location: EventLocation
+    var location: Place?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -182,7 +155,7 @@ struct Event: Identifiable, Codable {
         case description
         case info_url
         case images
-        //case location
+        case location
     }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -200,7 +173,6 @@ struct Event: Identifiable, Codable {
         guard let htmlString = description["fi"] else {
             return "No description available"
         }
-        
         do {
             if let data = htmlString.data(using: .utf8) {
                 let attributedString = try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
@@ -214,6 +186,8 @@ struct Event: Identifiable, Codable {
         }
     }
 }
+//------------------------Event end--------------------------
+
 
 typealias LocalizedString = [String: String]
 
@@ -223,5 +197,4 @@ extension LocalizedString {
         return self["fi"] ?? "Unnamed Event"
     }
 }
-
 
