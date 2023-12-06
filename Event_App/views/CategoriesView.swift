@@ -41,7 +41,17 @@ struct CategoriesView: View {
         Category(name: "Urheilu", symbolName: "sportscourt", backgroundColor: .green, iconColor: .white),
         Category(name: "Taide", symbolName: "paintpalette", backgroundColor: .purple, iconColor: .yellow),
         Category(name: "Teatteri", symbolName: "theatermasks", backgroundColor: .red, iconColor: .black),
-        Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .black)
+        Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .black),
+        Category(name: "Kirjallisuus", symbolName: "books.vertical", backgroundColor: .green, iconColor: .white),
+        Category(name: "Elokuva", symbolName: "film", backgroundColor: .purple, iconColor: .yellow),
+        Category(name: "Tiede", symbolName: "brain.head.profile", backgroundColor: .blue, iconColor: .white),
+        Category(name: "Ruoka", symbolName: "fork.knife", backgroundColor: .red, iconColor: .black),
+        Category(name: "Matkailu", symbolName: "airplane", backgroundColor: .orange, iconColor: .black),
+        Category(name: "Luonto", symbolName: "leaf", backgroundColor: .green, iconColor: .white),
+        Category(name: "Historia", symbolName: "scroll", backgroundColor: .purple, iconColor: .yellow),
+        Category(name: "Valokuvaus", symbolName: "camera", backgroundColor: .blue, iconColor: .white),
+        Category(name: "Käsityöt", symbolName: "scissors", backgroundColor: .red, iconColor: .black),
+        Category(name: "Astronomia", symbolName: "star", backgroundColor: .orange, iconColor: .black)
     ]
     
     
@@ -122,12 +132,14 @@ struct CategoriesView: View {
     }
 }
 
+
+
 struct EventListView: View {
     var category: Category
     @State private var events = [Event]() // Use your existing Event struct
     @State private var isLoading = false
     @State private var errorMessage: String?
-    
+
     var body: some View {
         VStack {
             if isLoading {
@@ -136,10 +148,7 @@ struct EventListView: View {
                 Text("Error: \(errorMessage)")
             } else {
                 List(events, id: \.id) { event in
-                    VStack(alignment: .leading) {
-                        Text(event.name.nameInLanguage()) // Modify as needed based on your Event struct
-                            .fontWeight(.bold)
-                    }
+                    CardView(event: event)
                 }
             }
         }
@@ -148,7 +157,7 @@ struct EventListView: View {
             fetchEventsForCategory(category)
         }
     }
-    
+
     func fetchEventsForCategory(_ category: Category) {
         isLoading = true
         let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -159,7 +168,7 @@ struct EventListView: View {
             isLoading = false
             return
         }
-        
+
         URLSession.shared.dataTask(with: url) { data, response, error in
             DispatchQueue.main.async {
                 isLoading = false
@@ -182,11 +191,8 @@ struct EventListView: View {
     }
 }
 
-struct CategoriesView_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoriesView()
-    }
-}
+
+
 
 // Extension to handle localized strings (modify as needed)
 //extension LocalizedString {
