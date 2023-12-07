@@ -73,12 +73,18 @@ struct Event: Identifiable, Codable {
     let id: String
     let name: LocalizedString
     let images: [EventImage]
+    let super_event: SuperEvent?
     
     enum CodingKeys: String, CodingKey {
         case id
         case name
         case images
+        case super_event
     }
+}
+struct SuperEvent: Codable {
+    // Add properties that are relevant to you. For filtering purposes,
+    // the existence of the struct might be enough
 }
 
 struct EventImage: Codable {
