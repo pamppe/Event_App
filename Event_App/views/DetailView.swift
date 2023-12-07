@@ -29,7 +29,8 @@ struct DetailView_Previews: PreviewProvider {
             name: ["fi": "Sample Event"],
             description: ["fi": "Sample Description"],
             info_url: ["fi": "Sample Link"],
-            images: []
+            images: [],
+            super_event: nil
         )
         let samplePlace = Place(
             //id: "1",

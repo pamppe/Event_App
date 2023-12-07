@@ -96,7 +96,8 @@ struct DetailCardView: View {
                 name: ["fi": "Sample Event"],
                 description: ["fi": "Sample Description"],
                 info_url: ["fi": "Sample Link"],
-                images: []
+                images: [],
+                super_event: nil
             )
             _ = Place(
                 //id: "1",

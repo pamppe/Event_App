@@ -157,6 +157,7 @@ struct Event: Identifiable, Codable {
         case info_url
         case images
         case location
+        case super_event
     }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -185,7 +186,6 @@ struct Event: Identifiable, Codable {
             print("Error converting HTML to plain text: \(error)")
             return "Error loading description"
         }
-        case super_event
     }
 }
 //------------------------Event end--------------------------
