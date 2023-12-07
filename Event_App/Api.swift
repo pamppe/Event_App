@@ -148,6 +148,7 @@ struct Event: Identifiable, Codable {
     let info_url: LocalizedString?
     let images: [EventImage]
     var location: Place?
+    let super_event: SuperEvent?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -184,9 +185,14 @@ struct Event: Identifiable, Codable {
             print("Error converting HTML to plain text: \(error)")
             return "Error loading description"
         }
+        case super_event
     }
 }
 //------------------------Event end--------------------------
+struct SuperEvent: Codable {
+    // Add properties that are relevant to you. For filtering purposes,
+    // the existence of the struct might be enough
+}
 
 
 typealias LocalizedString = [String: String]

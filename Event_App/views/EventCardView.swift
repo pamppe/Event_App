@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct EventCardView: View {
+    
+    
     @State private var events: [Event] = []
     @State private var isLoading = false
     @State private var errorMessage: String?

@@ -18,6 +18,7 @@ struct ContentView2: View {
                         Spacer()
                         SideMenuView()
                             .offset(x: showMenu ? 0 : UIScreen.main.bounds.width)
+                            .animation(.easeInOut(duration: 0.4), value: showMenu)
                     }
                 }
                 .background(Color.black.opacity(showMenu ? 0.5 : 0))
@@ -39,6 +40,7 @@ struct ContentView2: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
         .searchable(text: $searchText)
     }
     
