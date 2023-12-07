@@ -39,9 +39,19 @@ struct CategoriesView: View {
     let categories = [
         Category(name: "Musiikki", symbolName: "music.note", backgroundColor: .blue, iconColor: .white),
         Category(name: "Urheilu", symbolName: "sportscourt", backgroundColor: .green, iconColor: .white),
-        Category(name: "Taide", symbolName: "paintpalette", backgroundColor: .purple, iconColor: .yellow),
-        Category(name: "Teatteri", symbolName: "theatermasks", backgroundColor: .red, iconColor: .black),
-        Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .black)
+        Category(name: "Taide", symbolName: "paintpalette", backgroundColor: .purple, iconColor: .white),
+        Category(name: "Teatteri", symbolName: "theatermasks", backgroundColor: .red, iconColor: .white),
+        Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .white),
+        Category(name: "Kirjallisuus", symbolName: "books.vertical", backgroundColor: .green, iconColor: .white),
+        Category(name: "Elokuva", symbolName: "film", backgroundColor: .purple, iconColor: .white),
+        Category(name: "Tiede", symbolName: "brain.head.profile", backgroundColor: .blue, iconColor: .white),
+        Category(name: "Ruoka", symbolName: "fork.knife", backgroundColor: .red, iconColor: .white),
+        Category(name: "Matkailu", symbolName: "airplane", backgroundColor: .orange, iconColor: .white),
+        Category(name: "Luonto", symbolName: "leaf", backgroundColor: .green, iconColor: .white),
+        Category(name: "Historia", symbolName: "scroll", backgroundColor: .purple, iconColor: .white),
+        Category(name: "Valokuvaus", symbolName: "camera", backgroundColor: .blue, iconColor: .white),
+        Category(name: "Käsityöt", symbolName: "scissors", backgroundColor: .red, iconColor: .white),
+        Category(name: "Astronomia", symbolName: "star", backgroundColor: .orange, iconColor: .white)
     ]
     
     
@@ -122,6 +132,8 @@ struct CategoriesView: View {
     }
 }
 
+
+
 struct EventListView: View {
     var category: Category
     @State private var events = [Event]() // Use your existing Event struct
@@ -136,10 +148,7 @@ struct EventListView: View {
                 Text("Error: \(errorMessage)")
             } else {
                 List(events, id: \.id) { event in
-                    VStack(alignment: .leading) {
-                        Text(event.name.nameInLanguage()) // Modify as needed based on your Event struct
-                            .fontWeight(.bold)
-                    }
+                    CardView(event: event)
                 }
             }
         }
@@ -149,6 +158,38 @@ struct EventListView: View {
         }
     }
     
+    /*    func fetchEventsForCategory(_ category: Category) {
+     isLoading = true
+     let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+     let urlString = "https://api.hel.fi/linkedevents/v1/event/?combined_text=\(searchString)"
+     
+     guard let url = URL(string: urlString) else {
+     errorMessage = "Invalid URL"
+     isLoading = false
+     return
+     }
+     
+     URLSession.shared.dataTask(with: url) { data, response, error in
+     DispatchQueue.main.async {
+     isLoading = false
+     if let error = error {
+     self.errorMessage = "Failed to fetch data: \(error.localizedDescription)"
+     return
+     }
+     guard let data = data else {
+     self.errorMessage = "No data received"
+     return
+     }
+     do {
+     let response = try JSONDecoder().decode(EventResponse.self, from: data)
+     self.events = response.data // Ensure this matches the structure of EventResponse
+     } catch {
+     self.errorMessage = "Error decoding data: \(error.localizedDescription)"
+     }
+     }
+     }.resume()
+     }
+     }*/
     func fetchEventsForCategory(_ category: Category) {
         isLoading = true
         let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -173,20 +214,17 @@ struct EventListView: View {
                 }
                 do {
                     let response = try JSONDecoder().decode(EventResponse.self, from: data)
-                    self.events = response.data // Ensure this matches the structure of EventResponse
+                    let mainEvents = response.data.filter { $0.super_event == nil }
+                    self.events = mainEvents
                 } catch {
                     self.errorMessage = "Error decoding data: \(error.localizedDescription)"
                 }
             }
         }.resume()
     }
+    
 }
 
-struct CategoriesView_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoriesView()
-    }
-}
 
 // Extension to handle localized strings (modify as needed)
 //extension LocalizedString {
