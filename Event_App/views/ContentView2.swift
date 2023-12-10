@@ -18,7 +18,8 @@ struct ContentView2: View {
             ZStack{
                 VStack{
                     EventCardView()
-                        .navigationBarTitle("POPULAR NOW 🔥", displayMode: .inline)
+                        .navigationBarTitle(NSLocalizedString("popularNow", comment: "Navigation bar title for popular events"))
+
                 }
                 GeometryReader { _ in
                     HStack {

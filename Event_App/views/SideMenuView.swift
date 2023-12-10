@@ -43,7 +43,7 @@ struct SideMenuView: View {
                         .foregroundColor(.gray)
                         .offset(x: -18)
                         .shadow(color: .black, radius: 4, x: 2, y: 6)
-                    Text("Asetukset")
+                    Text(NSLocalizedString("settings", comment: "Settings menu item"))
                         .foregroundColor(.black)
                         .font(.title)
                         .offset(x: -1)
@@ -62,7 +62,7 @@ struct SideMenuView: View {
                         .foregroundColor(.brown)
                         .offset(x: -16)
                         .shadow(color: .black, radius: 4, x: 2, y: 6)
-                    Text("Kategoriat")
+                    Text(NSLocalizedString("categories", comment: "Categories menu item"))
                         .foregroundColor(.black)
                         .font(.title)
                 }

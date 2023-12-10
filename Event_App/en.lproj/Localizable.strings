@@ -1,0 +1,47 @@
+/* 
+  Localizable.strings
+  Event_App
+
+  Created by iosdev on 12/10/23.
+  
+*/
+
+"loadingMessage" = "Loading...";
+"errorMessage" = "Error: %@";
+
+"helsinkiEventsApp" = "Helsinki Events App";
+"clickHere" = "Click here";
+
+"popularNow" = "POPULAR NOW 🔥";
+
+"settings" = "Settings";
+"categories" = "Categories";
+"favorites" = "Favorites";
+"aboutUs" = "About Us";
+
+"language" = "Language";
+"english" = "English";
+"finnish" = "Finnish";
+"sampleFooter" = "Sample footer";
+"settingsTitle" = "Settings";
+
+"searchCategories" = "Search categories";
+"music" = "Music";
+"sports" = "Sports";
+"art" = "Art";
+"theater" = "Theater";
+"technology" = "Technology";
+"literature" = "Literature";
+"cinema" = "Cinema";
+"science" = "Science";
+"food" = "Food";
+"travel" = "Travel";
+"nature" = "Nature";
+"history" = "History";
+"photography" = "Photography";
+"crafts" = "Crafts";
+"astronomy" = "Astronomy";
+
+"aboutUsTitle" = "About Us";
+"aboutUsDescription" = "Heap is a mobile application designed and coded in 2023 by four Information and Communication Technology engineering students, intended to provide an easy and quick way to explore events in Helsinki.";
+
