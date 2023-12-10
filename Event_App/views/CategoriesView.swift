@@ -148,7 +148,9 @@ struct EventListView: View {
                 Text("Error: \(errorMessage)")
             } else {
                 List(events, id: \.id) { event in
-                    CardView(event: event)
+                    NavigationLink(destination: DetailView(event: event)) {
+                        CardView(event: event)
+                    }
                 }
             }
         }
