@@ -23,16 +23,16 @@ struct SettingsView: View {
         TabView(selection: $activeTab) {
             NavigationStack {
                 List {
-                    Section("Language") {
-                        Toggle("English", isOn: $toggles[0])
-                        Toggle("Finnish", isOn: $toggles[1])
-                    }
+                    Section(NSLocalizedString("language", comment: "Language section title")) {
+                                            Toggle(NSLocalizedString("english", comment: "English language toggle"), isOn: $toggles[0])
+                                            Toggle(NSLocalizedString("finnish", comment: "Finnish language toggle"), isOn: $toggles[1])
+                                        }
                     Section {
-                    } footer: {
-                        Text("Sample footer")
-                    }
+                                        } footer: {
+                                            Text(NSLocalizedString("sampleFooter", comment: "Sample footer text"))
+                                        }
                 }
-                .navigationTitle("Settings")
+                .navigationTitle(NSLocalizedString("settingsTitle", comment: "Settings page title"))
             }
         }
         .overlay(alignment: .topTrailing) {

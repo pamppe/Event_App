@@ -37,23 +37,23 @@ struct CategoryView: View {
 struct CategoriesView: View {
     // List of categories with corresponding SF Symbols, background and icon colors
     let categories = [
-        Category(name: "Musiikki", symbolName: "music.note", backgroundColor: .blue, iconColor: .white),
-        Category(name: "Urheilu", symbolName: "sportscourt", backgroundColor: .green, iconColor: .white),
-        Category(name: "Taide", symbolName: "paintpalette", backgroundColor: .purple, iconColor: .white),
-        Category(name: "Teatteri", symbolName: "theatermasks", backgroundColor: .red, iconColor: .white),
-        Category(name: "Teknologia", symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .white),
-        Category(name: "Kirjallisuus", symbolName: "books.vertical", backgroundColor: .green, iconColor: .white),
-        Category(name: "Elokuva", symbolName: "film", backgroundColor: .purple, iconColor: .white),
-        Category(name: "Tiede", symbolName: "brain.head.profile", backgroundColor: .blue, iconColor: .white),
-        Category(name: "Ruoka", symbolName: "fork.knife", backgroundColor: .red, iconColor: .white),
-        Category(name: "Matkailu", symbolName: "airplane", backgroundColor: .orange, iconColor: .white),
-        Category(name: "Luonto", symbolName: "leaf", backgroundColor: .green, iconColor: .white),
-        Category(name: "Historia", symbolName: "scroll", backgroundColor: .purple, iconColor: .white),
-        Category(name: "Valokuvaus", symbolName: "camera", backgroundColor: .blue, iconColor: .white),
-        Category(name: "Käsityöt", symbolName: "scissors", backgroundColor: .red, iconColor: .white),
-        Category(name: "Astronomia", symbolName: "star", backgroundColor: .orange, iconColor: .white)
+        Category(name: NSLocalizedString("music", comment: "Music category"), symbolName: "music.note", backgroundColor: .blue, iconColor: .white),
+        Category(name: NSLocalizedString("sports", comment: "Sports category"), symbolName: "sportscourt", backgroundColor: .green, iconColor: .white),
+        Category(name: NSLocalizedString("art", comment: "Art category"), symbolName: "paintpalette", backgroundColor: .purple, iconColor: .white),
+        Category(name: NSLocalizedString("theater", comment: "Theater category"), symbolName: "theatermasks", backgroundColor: .red, iconColor: .white),
+        Category(name: NSLocalizedString("technology", comment: "Technology category"), symbolName: "desktopcomputer", backgroundColor: .orange, iconColor: .white),
+        Category(name: NSLocalizedString("literature", comment: "Literature category"), symbolName: "books.vertical", backgroundColor: .green, iconColor: .white),
+        Category(name: NSLocalizedString("cinema", comment: "Cinema category"), symbolName: "film", backgroundColor: .purple, iconColor: .white),
+        Category(name: NSLocalizedString("science", comment: "Science category"), symbolName: "brain.head.profile", backgroundColor: .blue, iconColor: .white),
+        Category(name: NSLocalizedString("food", comment: "Food category"), symbolName: "fork.knife", backgroundColor: .red, iconColor: .white),
+        Category(name: NSLocalizedString("travel", comment: "Travel category"), symbolName: "airplane", backgroundColor: .orange, iconColor: .white),
+        Category(name: NSLocalizedString("nature", comment: "Nature category"), symbolName: "leaf", backgroundColor: .green, iconColor: .white),
+        Category(name: NSLocalizedString("history", comment: "History category"), symbolName: "scroll", backgroundColor: .purple, iconColor: .white),
+        Category(name: NSLocalizedString("photography", comment: "Photography category"), symbolName: "camera", backgroundColor: .blue, iconColor: .white),
+        Category(name: NSLocalizedString("crafts", comment: "Crafts category"), symbolName: "scissors", backgroundColor: .red, iconColor: .white),
+        Category(name: NSLocalizedString("astronomy", comment: "Astronomy category"), symbolName: "star", backgroundColor: .orange, iconColor: .white)
     ]
-    
+
     
     @StateObject var speechRecognizer = SpeechRecognizer()
     @State var isRecording = false

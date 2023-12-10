@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6A377A4B2B1BB239009E296C /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A377A4A2B1BB239009E296C /* SpeechRecognizer.swift */; };
+		6A4333552B25FFB9005B1DF3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6A4333572B25FFB9005B1DF3 /* Localizable.strings */; };
 		6A6A893B2B026905001B821D /* EventCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6A893A2B026905001B821D /* EventCardView.swift */; };
 		6A6A893D2B027331001B821D /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6A893C2B027331001B821D /* DetailView.swift */; };
 		6A8AE9B62B0BAC8900593D04 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8AE9B52B0BAC8900593D04 /* CategoriesView.swift */; };
@@ -24,6 +25,8 @@
 
 /* Begin PBXFileReference section */
 		6A377A4A2B1BB239009E296C /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
+		6A4333562B25FFB9005B1DF3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6A4333582B25FFBC005B1DF3 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6A6A893A2B026905001B821D /* EventCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCardView.swift; sourceTree = "<group>"; };
 		6A6A893C2B027331001B821D /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		6A8AE9B52B0BAC8900593D04 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
@@ -90,6 +93,7 @@
 				6AD03EFC2AFD03DC0028A6A3 /* Preview Content */,
 				6A9F38182B001C7C00099E26 /* Api.swift */,
 				6A377A4A2B1BB239009E296C /* SpeechRecognizer.swift */,
+				6A4333572B25FFB9005B1DF3 /* Localizable.strings */,
 			);
 			path = Event_App;
 			sourceTree = "<group>";
@@ -144,6 +148,7 @@
 			knownRegions = (
 				en,
 				Base,
+				fi,
 			);
 			mainGroup = 6AD03EEA2AFD03D90028A6A3;
 			productRefGroup = 6AD03EF42AFD03D90028A6A3 /* Products */;
@@ -161,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AD03EFE2AFD03DC0028A6A3 /* Preview Assets.xcassets in Resources */,
+				6A4333552B25FFB9005B1DF3 /* Localizable.strings in Resources */,
 				6AD03EFB2AFD03DC0028A6A3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,6 +193,18 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6A4333572B25FFB9005B1DF3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6A4333562B25FFB9005B1DF3 /* en */,
+				6A4333582B25FFBC005B1DF3 /* fi */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		6AD03EFF2AFD03DC0028A6A3 /* Debug */ = {

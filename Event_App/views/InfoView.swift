@@ -16,11 +16,11 @@ struct InfoView: View {
             ZStack{
                 Color.white
                     .edgesIgnoringSafeArea(.all)
-                Text("Tietoa meistä")
+                Text(NSLocalizedString("aboutUsTitle", comment: "Title for About Us page"))
                     .font(Font.custom("Modak", size: 35, relativeTo: .title))
                     .foregroundColor(.black)
                     .offset(y: -250)
-                Text(" Heap on neljän tieto- ja viestinätekniikan   insinööriopiskelijan vuonna 2023 suunnittelema ja koodaama mobiilisovellus, jonka käyttötarkoituksena on toimia helppona ja nopeana tapana tutustua Helsingin tapahtumatarjontaan.")
+                Text(NSLocalizedString("aboutUsDescription", comment: "Description for About Us page"))
                     .frame(width: 360)
                     .lineLimit(30)
                     .font(.system(size: 20))

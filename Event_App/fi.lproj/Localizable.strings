@@ -1,0 +1,46 @@
+/* 
+  Localizable.strings
+  Event_App
+
+  Created by iosdev on 12/10/23.
+  
+*/
+
+"loadingMessage" = "Ladataan...";
+"errorMessage" = "Virhe: %@";
+
+"helsinkiEventsApp" = "Helsingin Tapahtumat App";
+"clickHere" = "Klikkaa tästä";
+
+"popularNow" = "SUOSITTUA NYT 🔥";
+
+"settings" = "Asetukset";
+"categories" = "Kategoriat";
+"favorites" = "Suosikit";
+"aboutUs" = "Tietoa Meistä";
+
+"language" = "Kieli";
+"english" = "Englanti";
+"finnish" = "Suomi";
+"sampleFooter" = "Esimerkki alatunniste";
+"settingsTitle" = "Asetukset";
+
+"searchCategories" = "Etsi kategorioita";
+"music" = "Musiikki";
+"sports" = "Urheilu";
+"art" = "Taide";
+"theater" = "Teatteri";
+"technology" = "Teknologia";
+"literature" = "Kirjallisuus";
+"cinema" = "Elokuva";
+"science" = "Tiede";
+"food" = "Ruoka";
+"travel" = "Matkailu";
+"nature" = "Luonto";
+"history" = "Historia";
+"photography" = "Valokuvaus";
+"crafts" = "Käsityöt";
+"astronomy" = "Astronomia";
+
+"aboutUsTitle" = "Tietoa Meistä";
+"aboutUsDescription" = "Heap on neljän tieto- ja viestintätekniikan insinööriopiskelijan vuonna 2023 suunnittelema ja koodaama mobiilisovellus, jonka käyttötarkoituksena on toimia helppona ja nopeana tapana tutustua Helsingin tapahtumatarjontaan.";

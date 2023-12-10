@@ -27,12 +27,12 @@ struct ContentView: View {
                         .offset(y: -20)
                         .shadow(color: .black, radius: 4, x: 2, y: 6)
 
-                    Text("Helsinki Events App")
+                    Text(NSLocalizedString("helsinkiEventsApp", comment: "App main title"))
                         .foregroundColor(.white)
                         .offset(y: -150)
 
                     NavigationLink(destination: ContentView2()) {
-                        Text("Click here")
+                        Text(NSLocalizedString("clickHere", comment: "Main button text"))
                             .foregroundColor(.white)
                     }
                 }

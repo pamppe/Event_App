@@ -17,9 +17,10 @@ struct EventCardView: View {
     var body: some View {
         VStack {
             if events.isEmpty {
-                Text("Loading...")
+                Text(NSLocalizedString("loadingMessage", comment: "Loading message"))
             } else if let errorMessage = errorMessage {
-                Text("Error: \(errorMessage)")
+                // The %@ will be replaced with the actual error message
+                Text(String(format: NSLocalizedString("errorMessage", comment: "Error message"), errorMessage))
             } else {
                 List(events) { event in
                     VStack(alignment: .leading) {
