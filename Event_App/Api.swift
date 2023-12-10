@@ -12,7 +12,7 @@ import Foundation
 func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     var urlString = "https://api.hel.fi/linkedevents/v1/event/"
     guard URL(string: urlString) != nil else { return }
-    
+
     // Change HTTP to HTTPS
         if let url = URL(string: urlString), url.scheme == "http" {
             urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
@@ -29,7 +29,7 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
             return
         }
-        
+
         // Print the raw JSON response for debugging
 //        do {
 //            let jsonData = try JSONSerialization.data(withJSONObject: try JSONSerialization.jsonObject(with: data), options: .prettyPrinted)
@@ -38,7 +38,7 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
 //        } catch {
 //            print("Error converting JSON data to string: \(error)")
 //        }
-        
+
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
             print("Number of events fetched: \(response.data.count)")
@@ -54,42 +54,6 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     }
     task.resume()
 }
-
-
-                            //Place
-func fetchEventLocation(completion: @escaping (Result<[Place], Error>) -> Void) {
-    let urlString = "https://api.hel.fi/linkedevents/v1/place/"
-    guard URL(string: urlString) != nil else { return }
-    
-    guard let url = URL(string: urlString) else { return }
-    
-    let ptask = URLSession.shared.dataTask(with: url) { pData, pResponse, error in
-        if let error = error {
-            print("Error fetching data: \(error)")
-            completion(.failure(error))
-            return
-        }
-        guard let pData = pData else {
-            print("No data received")
-            completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
-            return
-        }
-        do {
-            let response = try JSONDecoder().decode(PlaceResponse.self, from: pData)
-            print("Number of events fetched: \(response.pData.count)")
-            print("Data received: \(response.pData)")
-            completion(.success(response.pData))
-        } catch {
-            print("Error decoding data: \(error)")
-            if let decodingError = error as? DecodingError {
-                print(decodingError)
-            }
-            completion(.failure(error))
-        }
-    }
-    ptask.resume()
-}
-
 
                 //Duplicate
 func removeDuplicateEvents(events: [Event]) -> [Event] {
@@ -111,29 +75,6 @@ func removeDuplicateEvents(events: [Event]) -> [Event] {
 //--------------------------Func end---------------------------------
 
 
-//--------------------------Place------------------------------------
-struct PlaceResponse: Codable {
-    let pData: [Place]
-}
-struct Place: Codable{
-    //var id: String
-    var street_address: LocalizedString?
-    
-    enum CodingKeys: String, CodingKey {
-        //case id
-        case street_address
-    }
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        //try container.encode(id, forKey: .id)
-        try container.encode(street_address, forKey: .street_address)
-        
-    }
-}
-
-//------------------------Place end--------------------------
-
-
 //------------------------Event------------------------------
 struct EventResponse: Codable {
     let data: [Event]
@@ -141,13 +82,16 @@ struct EventResponse: Codable {
 struct EventImage: Codable {
     let url: String
 }
+struct SuperEvent: Codable {
+    // Add properties that are relevant to you. For filtering purposes,
+    // the existence of the struct might be enough
+}
 struct Event: Identifiable, Codable {
     let id: String
     let name: LocalizedString
     let description: LocalizedString
     let info_url: LocalizedString?
     let images: [EventImage]
-    var location: Place?
     let super_event: SuperEvent?
     
     enum CodingKeys: String, CodingKey {
@@ -156,9 +100,10 @@ struct Event: Identifiable, Codable {
         case description
         case info_url
         case images
-        case location
         case super_event
     }
+
+   
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -189,11 +134,6 @@ struct Event: Identifiable, Codable {
     }
 }
 //------------------------Event end--------------------------
-struct SuperEvent: Codable {
-    // Add properties that are relevant to you. For filtering purposes,
-    // the existence of the struct might be enough
-}
-
 
 typealias LocalizedString = [String: String]
 

@@ -10,9 +10,6 @@ import UIKit
 
 struct DetailCardView: View {
     var event: Event
-    //var place: Place
-    @State private var place: Place? // Use @State to handle asynchronous updates
-    
     var body: some View {
         VStack(alignment: .center, spacing: 16) { // Center-align content vertically with spacing
             List {
@@ -59,36 +56,9 @@ struct DetailCardView: View {
                         }
                         .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 }
-                // Display street address information
-                Section(header: Text("Location")) {
-                    VStack(alignment: .leading) {
-                        Text("Street Address:")
-                        Text("\(place?.street_address?.nameInLanguage() ?? "N/A")")
-                    }
-                }
-            }
-            .onAppear {
-                // Fetch location data when the view appears
-                fetchEventLocation { result in
-                    switch result {
-                    case .success(let places):
-                        if let place = places.first {
-                            // Access the street address
-                            let streetAddress = place.street_address?.nameInLanguage()
-                            print("Street Address (fi): \(String(describing: streetAddress))")
-                        }
-                    case .failure(let error):
-                        // Handle the error
-                        print("Error fetching location: \(error)")
-                    }
-                }
-                
             }
         }
     }
-    
-    
-    
     struct DetailCardView_Previews: PreviewProvider {
         static var previews: some View {
             let sampleEvent = Event(
@@ -98,10 +68,6 @@ struct DetailCardView: View {
                 info_url: ["fi": "Sample Link"],
                 images: [],
                 super_event: nil
-            )
-            _ = Place(
-                //id: "1",
-                street_address: ["fi": "Sample address"]
             )
             return DetailCardView(event: sampleEvent)
         }

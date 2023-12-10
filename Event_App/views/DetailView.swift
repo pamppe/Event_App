@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DetailView: View {
     var event: Event
-    var place: Place
     var body: some View {
         NavigationView {
             ZStack {
@@ -21,7 +20,6 @@ struct DetailView: View {
         }
     }
 }
-
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleEvent = Event(
@@ -32,11 +30,7 @@ struct DetailView_Previews: PreviewProvider {
             images: [],
             super_event: nil
         )
-        let samplePlace = Place(
-            //id: "1",
-            street_address: ["fi": "Sample address"]
-        )
-        return DetailView(event: sampleEvent, place: samplePlace)
+        return DetailView(event: sampleEvent)
     }
 }
 

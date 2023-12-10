@@ -8,12 +8,9 @@
 import SwiftUI
 
 struct EventCardView: View {
-    
-    
     @State private var events: [Event] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
-    
     var body: some View {
         VStack {
             if events.isEmpty {
@@ -22,7 +19,7 @@ struct EventCardView: View {
                 Text("Error: \(errorMessage)")
             } else {
                 List(events) { event in
-                    NavigationLink(destination: DetailView(event: event, place: event.location ?? Place(/*id: "1",*/ street_address: ["fi": "Sample address"]))){
+                    NavigationLink(destination: DetailView(event: event)){
                         VStack(alignment: .leading) {
                             CardView(event: event)
                                 .padding()
@@ -75,7 +72,6 @@ struct CardView: View {
             }
         }
     }
-    
     struct EventCardView_Previews: PreviewProvider {
         static var previews: some View {
             EventCardView()
