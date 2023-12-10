@@ -15,7 +15,7 @@ struct CategoryView: View {
     var width: CGFloat
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             Image(systemName: category.symbolName)
                 .resizable()
                 .scaledToFit()
@@ -53,7 +53,7 @@ struct CategoriesView: View {
         Category(name: NSLocalizedString("crafts", comment: "Crafts category"), symbolName: "scissors", backgroundColor: .red, iconColor: .white),
         Category(name: NSLocalizedString("astronomy", comment: "Astronomy category"), symbolName: "star", backgroundColor: .orange, iconColor: .white)
     ]
-
+    
     
     @StateObject var speechRecognizer = SpeechRecognizer()
     @State var isRecording = false
@@ -69,47 +69,80 @@ struct CategoriesView: View {
         }
     }
     var body: some View {
-            NavigationView {
-                GeometryReader { geometry in
-                    VStack {
-                        HStack {
-                            Button(action: {
-                                if isRecording {
-                                    stopRecord()
-                                } else {
-                                    startRecord()
-                                }
-                            }) {
-                                Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(isRecording ? .red : .blue)
+        NavigationView {
+            GeometryReader { geometry in
+                VStack(alignment: .leading, spacing: 1) {
+                    HStack(spacing: 1) {
+                        Button(action: {
+                            if isRecording {
+                                stopRecord()
+                            } else {
+                                startRecord()
                             }
-
-                            TextField("Etsi kategorioita", text: $searchQuery)
-                                .padding(7)
-                                .background(Color(.systemGray6))
-                                .cornerRadius(10)
-                                .textFieldStyle(RoundedBorderTextFieldStyle()) // Optional: Apply a specific style
+                        }) {
+                            Image(systemName: isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(isRecording ? .red : .blue)
                         }
-                        .onChange(of: speechRecognizer.transcript) { newTranscript in
-                            searchQueryFromSpeech = newTranscript
-                            updateSearchQuery()
-                        }
+                        .padding(.leading, 8)
+                        
+                        TextField("Etsi kategorioita", text: $searchQuery)
+                            .padding(6)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(10)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .frame(maxWidth: .infinity) // Set maximum width
+                            .padding(.trailing, 10)
+                    }
+                    .onChange(of: speechRecognizer.transcript) { newTranscript in
+                        searchQueryFromSpeech = newTranscript
+                        updateSearchQuery()
+                    }
+                    
                     ScrollView {
-                        VStack(spacing: 20) {
+                        VStack(alignment: .leading, spacing: 20) {
                             ForEach(filteredCategories) { category in
                                 NavigationLink(destination: EventListView(category: category)) {
-                                    CategoryView(category: category, width: geometry.size.width - 40)
+                                    CategoryView(category: category, width: geometry.size.width - 50)
                                 }
                             }
                         }
-                        .padding()
+                        .padding(10)
                     }
                 }
             }
-            .navigationBarTitle("Kategoriat")
+            VStack {
+                NavigationLink(destination: NavigationView {
+                    CategoriesView()
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarItems(
+                            leading: Button(action: {
+                            }) {
+                                HStack {
+                                    Image(systemName: "chevron.left")
+                                        .foregroundColor(.blue)
+                                        .frame(width: 30, height: 30)
+                                        .padding(.leading, 8) // Adjust the left padding for the custom back button
+                                    Text("Back")
+                                }
+                            }
+                        )
+                }) {
+                    Image(systemName: "folder.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 35, height: 35)
+                        .foregroundColor(.brown)
+                        .offset(x: -16)
+                        .shadow(color: .black, radius: 4, x: 2, y: 6)
+                    Text(NSLocalizedString("categories", comment: "Categories menu item"))
+                        .foregroundColor(.black)
+                        .font(.title)
+                }
+            }
         }
     }
     func startRecord(){

@@ -16,10 +16,9 @@ struct ContentView2: View {
             .shadow(color: .black, radius: 4, x: 2, y: 6)
         NavigationView {
             ZStack{
-                VStack{
+                VStack(alignment: .leading){
                     EventCardView()
                         .navigationBarTitle(NSLocalizedString("popularNow", comment: "Navigation bar title for popular events"))
-
                 }
                 GeometryReader { _ in
                     HStack {

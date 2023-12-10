@@ -24,13 +24,13 @@ struct SettingsView: View {
             NavigationStack {
                 List {
                     Section(NSLocalizedString("language", comment: "Language section title")) {
-                                            Text(NSLocalizedString("changeLanguage", comment: "Change language"))
-                                        }
+                        Text(NSLocalizedString("changeLanguage", comment: "Change language"))
+                    }
                     Section {
-                                        } footer: {
-                                            Text(NSLocalizedString("sampleFooter", comment: "Sample footer text"))
-                                                .foregroundColor(.black)
-                                        }
+                    } footer: {
+                        Text(NSLocalizedString("sampleFooter", comment: "Sample footer text"))
+                            .foregroundColor(.black)
+                    }
                 }
                 .navigationTitle(NSLocalizedString("settingsTitle", comment: "Settings page title"))
             }
@@ -39,18 +39,18 @@ struct SettingsView: View {
             Button(action: {
                 toggleDarkMode.toggle()
             }, label: {
-            Image(systemName: toggleDarkMode ?  "sun.max.fill" : "moon.fill")
-                .font(.title2)
-                .foregroundStyle(Color.primary)
+                Image(systemName: toggleDarkMode ?  "sun.max.fill" : "moon.fill")
+                    .font(.title2)
+                    .foregroundStyle(Color.primary)
                 
-                .frame(width: 40, height: 40)
+                    .frame(width: 40, height: 40)
             })
-                .padding(10)
-                .background {
-                    GeometryReader(content: { geometry in
-                        
-                    })
-                }
+            .padding(10)
+            .background {
+                GeometryReader(content: { geometry in
+                    
+                })
+            }
         }
     }
 }
