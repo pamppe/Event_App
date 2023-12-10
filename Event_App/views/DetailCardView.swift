@@ -30,7 +30,7 @@ struct DetailCardView: View {
                                         .resizable()
                                         .scaledToFit()
                                 case .failure:
-                                    Text("Image not available") // Display a text view in case of failure
+                                    Text(NSLocalizedString("imageNotAvailable", comment: "Image not available"))
                                 @unknown default:
                                     EmptyView() // Fallback to an empty view for any unknown case
                                 }
@@ -40,14 +40,14 @@ struct DetailCardView: View {
                     }
                 }
                 VStack(alignment: .center){
-                    Text("Description")
+                    Text(NSLocalizedString("description", comment: "Description"))
                     Text("\(event.sanitizedDescription())")
                         .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 }
                 // Display link to Event
                 VStack(alignment: .center){
-                    Text("Link to event page")
-                    Text("\(event.info_url?.nameInLanguage() ?? "N/A")")
+                    Text(NSLocalizedString("linkToEventPage", comment: "Link to event page"))
+                    Text("\(event.info_url?.nameInLanguage() ?? NSLocalizedString("noLinkAvailable", comment: "No link available"))")
                         .foregroundColor(.blue)
                         .onTapGesture {
                             if let urlString = event.info_url?.values.first, let url = URL(string: urlString) {

@@ -14,7 +14,7 @@ struct DetailView: View {
             ZStack {
                 VStack {
                     DetailCardView(event: event)
-                        .navigationBarTitle("Event Details", displayMode: .inline)
+                        .navigationBarTitle(NSLocalizedString("eventDetails", comment:"Navigation bar tittle for event details"),displayMode: .inline)
                 }
             }
         }

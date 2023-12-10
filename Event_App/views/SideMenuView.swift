@@ -82,7 +82,7 @@ struct SideMenuView: View {
                         .foregroundColor(.red)
                         .offset(x: -30)
                         .shadow(color: .black, radius: 4, x: 2, y: 6)
-                    Text("Suosikit")
+                    Text(NSLocalizedString("favorites", comment: "Categories menu item"))
                         .foregroundColor(.black)
                         .font(.title)
                         .offset(x: -15)
@@ -91,7 +91,7 @@ struct SideMenuView: View {
             Spacer()
             VStack {
                 NavigationLink(destination: InfoView()) {
-                    Text("ⓘ Tietoa meistä")
+                    Text(NSLocalizedString("infoAboutUs", comment: "Categories menu item"))
                         .foregroundColor(.black)
                 }
             }

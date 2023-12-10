@@ -17,13 +17,20 @@
 "settings" = "Asetukset";
 "categories" = "Kategoriat";
 "favorites" = "Suosikit";
+"infoAboutUs" = "ⓘ Tietoa meistä";
 "aboutUs" = "Tietoa Meistä";
 
 "language" = "Kieli";
-"english" = "Englanti";
-"finnish" = "Suomi";
-"sampleFooter" = "Esimerkki alatunniste";
+"changeLanguage" = "Vaihtaaksesi kieli, mene puhelimesi asetuksiin ja vaihda se sieltä.";
+"sampleFooter" = "Tuetut kielt ovat Englanti & Suomi";
 "settingsTitle" = "Asetukset";
+
+"eventDetails" = "Tapahtuman Tiedot";
+"description" = "Kuvaus";
+"linkToEventPage" = "Linkki tapahtuman sivulle";
+"noLinkAvailable" = "Linkkiä ei saatavilla";
+"imageNotAvailable" = "Kuvaa ei saatavilla";
+"noDescriptionAvailable" = "Kuvausta ei saatavilla";
 
 "searchCategories" = "Etsi kategorioita";
 "music" = "Musiikki";

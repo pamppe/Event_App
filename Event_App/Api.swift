@@ -118,7 +118,7 @@ struct Event: Identifiable, Codable {
     // Helper function to sanitize HTML content
     func sanitizedDescription() -> String {
         guard let htmlString = description["fi"] else {
-            return "No description available"
+            return NSLocalizedString("noDescriptionAvailable", comment: "No description available")
         }
         do {
             if let data = htmlString.data(using: .utf8) {

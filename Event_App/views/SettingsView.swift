@@ -24,12 +24,12 @@ struct SettingsView: View {
             NavigationStack {
                 List {
                     Section(NSLocalizedString("language", comment: "Language section title")) {
-                                            Toggle(NSLocalizedString("english", comment: "English language toggle"), isOn: $toggles[0])
-                                            Toggle(NSLocalizedString("finnish", comment: "Finnish language toggle"), isOn: $toggles[1])
+                                            Text(NSLocalizedString("changeLanguage", comment: "Change language"))
                                         }
                     Section {
                                         } footer: {
                                             Text(NSLocalizedString("sampleFooter", comment: "Sample footer text"))
+                                                .foregroundColor(.black)
                                         }
                 }
                 .navigationTitle(NSLocalizedString("settingsTitle", comment: "Settings page title"))

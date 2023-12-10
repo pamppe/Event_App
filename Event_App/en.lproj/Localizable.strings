@@ -17,13 +17,20 @@
 "settings" = "Settings";
 "categories" = "Categories";
 "favorites" = "Favorites";
+"infoAboutUs" = "ⓘ Info about us";
 "aboutUs" = "About Us";
 
 "language" = "Language";
-"english" = "English";
-"finnish" = "Finnish";
-"sampleFooter" = "Sample footer";
+"changeLanguage" = "To Change the language, go to your phones setting and change it there.";
+"sampleFooter" = "Supported languages are English & Finnish";
 "settingsTitle" = "Settings";
+
+"eventDetails" = "Event details";
+"description" = "Description";
+"linkToEventPage" = "Link to event page";
+"noLinkAvailable" = "No Link Available";
+"imageNotAvailable" = "Image not available";
+"noDescriptionAvailable" = "No description available";
 
 "searchCategories" = "Search categories";
 "music" = "Music";
