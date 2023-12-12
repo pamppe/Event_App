@@ -56,9 +56,6 @@ struct ContentView2: View {
             }
         }
     }
-    private var displayedTitle: String {
-        showMenu ? "" : NSLocalizedString("popularNow", comment: "Navigation bar title for popular events")
-    }
 }
 
 

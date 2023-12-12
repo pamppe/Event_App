@@ -21,7 +21,7 @@ struct CategoryView: View {
     var width: CGFloat
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             Image(systemName: category.symbolName)
                 .resizable()
                 .scaledToFit()
@@ -213,8 +213,6 @@ struct EventListView: View {
                     }
                 }
             }
-        }
-        .onAppear {
         }
     }
     

@@ -61,8 +61,9 @@ struct CardView: View {
             Text(event.name.nameInLanguage())
                 .font(.headline)
                 .shadow(radius: 30)
-                .padding(EdgeInsets(top: 20, leading: 20, bottom: 5, trailing: 20))
+                .padding(EdgeInsets(top: 20, leading: 30, bottom: 5, trailing: 20))
                 .lineLimit(2)
+                .frame(width: 200)
             
             if let imageUrl = event.images.first?.url,
                let encodedUrlString = imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
@@ -84,8 +85,8 @@ struct CardView: View {
                     }
                     
                 }
-                .frame(width: 500, height: 250)
-                .padding(.leading, 15)
+                .frame(width: 300, height: 250)
+                //.padding(.leading, 15)
             }
             Spacer()
         }
