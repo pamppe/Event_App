@@ -1,12 +1,18 @@
+//
+//  CategoriesView.swift
+//  Event_App
+//
+//  Created by iosdev on 19.11.2023.
+//
+
 import SwiftUI
 
-// Define the Category struct with a color property for the background
 struct Category: Identifiable {
     let id = UUID()
     let name: String
     let symbolName: String
     let backgroundColor: Color
-    let iconColor: Color // Separate color for the icon
+    let iconColor: Color
 }
 
 // Custom view for displaying a category
@@ -20,15 +26,15 @@ struct CategoryView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: width / 2, height: width / 2)
-                .foregroundColor(category.iconColor) // Icon color
+                .foregroundColor(category.iconColor)
             
             Text(category.name)
                 .font(.headline)
-                .foregroundColor(.white) // Text color for better contrast
+                .foregroundColor(.white)
         }
         .frame(width: width)
         .padding()
-        .background(category.backgroundColor) // Background color
+        .background(category.backgroundColor)
         .cornerRadius(20)
     }
 }
@@ -93,7 +99,7 @@ struct CategoriesView: View {
                             .background(Color(.systemGray6))
                             .cornerRadius(10)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .frame(maxWidth: .infinity) // Set maximum width
+                            .frame(maxWidth: .infinity)
                             .padding(.trailing, 10)
                     }
                     .onChange(of: speechRecognizer.transcript) { newTranscript in
@@ -125,7 +131,7 @@ struct CategoriesView: View {
                                     Image(systemName: "chevron.left")
                                         .foregroundColor(.blue)
                                         .frame(width: 30, height: 30)
-                                        .padding(.leading, 8) // Adjust the left padding for the custom back button
+                                        .padding(.leading, 8)
                                     Text("Back")
                                 }
                             }
@@ -145,6 +151,7 @@ struct CategoriesView: View {
             }
         }
     }
+    //Functions for starting and stopping the voice to speech recording
     func startRecord(){
         speechRecognizer.resetTranscript()
         speechRecognizer.startTranscribing()
@@ -169,7 +176,7 @@ struct CategoriesView: View {
 
 struct EventListView: View {
     var category: Category
-    @State private var events = [Event]() // Use your existing Event struct
+    @State private var events = [Event]()
     @State private var isLoading = false
     @State private var errorMessage: String?
     
@@ -181,89 +188,66 @@ struct EventListView: View {
                 Text("Error: \(errorMessage)")
             } else {
                 List(events, id: \.id) { event in
-                    CardView(event: event)
+                    NavigationLink(destination: DetailView(event: event)){
+                        VStack(alignment: .leading) {
+                            ZStack {
+                                CardView(event: event)
+                                    .padding()
+                            }
+                        }
+                    }
                 }
             }
         }
         .navigationTitle(category.name)
         .onAppear {
-            fetchEventsForCategory(category)
+            isLoading = true
+            fetchEventsForCategory(category) { result in
+                DispatchQueue.main.async {
+                    isLoading = false
+                    switch result {
+                    case .success(let fetchedEvents):
+                        self.events = removeDuplicateEvents(events: fetchedEvents)
+                    case .failure(let error):
+                        self.errorMessage = error.localizedDescription
+                    }
+                }
+            }
+        }
+        .onAppear {
         }
     }
     
-    /*    func fetchEventsForCategory(_ category: Category) {
-     isLoading = true
-     let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-     let urlString = "https://api.hel.fi/linkedevents/v1/event/?combined_text=\(searchString)"
-     
-     guard let url = URL(string: urlString) else {
-     errorMessage = "Invalid URL"
-     isLoading = false
-     return
-     }
-     
-     URLSession.shared.dataTask(with: url) { data, response, error in
-     DispatchQueue.main.async {
-     isLoading = false
-     if let error = error {
-     self.errorMessage = "Failed to fetch data: \(error.localizedDescription)"
-     return
-     }
-     guard let data = data else {
-     self.errorMessage = "No data received"
-     return
-     }
-     do {
-     let response = try JSONDecoder().decode(EventResponse.self, from: data)
-     self.events = response.data // Ensure this matches the structure of EventResponse
-     } catch {
-     self.errorMessage = "Error decoding data: \(error.localizedDescription)"
-     }
-     }
-     }.resume()
-     }
-     }*/
-    func fetchEventsForCategory(_ category: Category) {
+    func fetchEventsForCategory(_ category: Category, completion: @escaping (Result<[Event], Error>) -> Void) {
         isLoading = true
         let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let urlString = "https://api.hel.fi/linkedevents/v1/event/?combined_text=\(searchString)"
-        
+
         guard let url = URL(string: urlString) else {
-            errorMessage = "Invalid URL"
-            isLoading = false
+            completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
         }
-        
+
         URLSession.shared.dataTask(with: url) { data, response, error in
             DispatchQueue.main.async {
-                isLoading = false
+                self.isLoading = false
                 if let error = error {
-                    self.errorMessage = "Failed to fetch data: \(error.localizedDescription)"
+                    completion(.failure(error))
                     return
                 }
                 guard let data = data else {
-                    self.errorMessage = "No data received"
+                    completion(.failure(NSError(domain: "No data received", code: 0, userInfo: nil)))
                     return
                 }
                 do {
                     let response = try JSONDecoder().decode(EventResponse.self, from: data)
                     let mainEvents = response.data.filter { $0.super_event == nil }
-                    self.events = mainEvents
+                    completion(.success(mainEvents))
                 } catch {
-                    self.errorMessage = "Error decoding data: \(error.localizedDescription)"
+                    completion(.failure(error))
                 }
             }
         }.resume()
     }
-    
+
 }
-
-
-// Extension to handle localized strings (modify as needed)
-//extension LocalizedString {
-//    func nameInLanguage() -> String {
-//       return self["fi"] ?? "Unnamed Event"
-//    }
-//}
-
-// Make sure Event and EventResponse structs are defined elsewhere in your project.

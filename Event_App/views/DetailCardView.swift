@@ -11,11 +11,24 @@ import UIKit
 struct DetailCardView: View {
     var event: Event
     var body: some View {
-        VStack(alignment: .center, spacing: 16) { // Center-align content vertically with spacing
+        VStack(alignment: .leading, spacing: 16) {
             List {
-                VStack(alignment: .center){
-                    Text("\(event.name.nameInLanguage())")
+                
+                ZStack{
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .edgesIgnoringSafeArea(.all)
+                    //Display event name
+                    VStack(alignment: .leading){
+                        Text("\(event.name.nameInLanguage())")
+                    }
                 }
+                .border(.black)
+                
+                //Display image
                 VStack(alignment: .center){
                     ForEach(event.images, id: \.url) { image in
                         if let imageUrl = event.images.first?.url,
@@ -29,36 +42,60 @@ struct DetailCardView: View {
                                     image
                                         .resizable()
                                         .scaledToFit()
+                                        .cornerRadius(15)
+                                        .shadow(radius: 20)
                                 case .failure:
                                     Text(NSLocalizedString("imageNotAvailable", comment: "Image not available"))
                                 @unknown default:
                                     EmptyView() // Fallback to an empty view for any unknown case
                                 }
                             }
-                            .frame(height: 200)
-                        }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 200)                                }
                     }
                 }
-                VStack(alignment: .center){
-                    Text(NSLocalizedString("description", comment: "Description"))
-                    Text("\(event.sanitizedDescription())")
-                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                
+                ZStack{
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .edgesIgnoringSafeArea(.all)
+                    // Display description
+                    VStack(alignment: .center){
+                        Text(NSLocalizedString("description", comment: "Description"))
+                        Text("\(event.sanitizedDescription())")
+                            .padding(EdgeInsets(top: 8, leading: 5, bottom: 8, trailing: 5))
+                    }
                 }
-                // Display link to Event
-                VStack(alignment: .center){
-                    Text(NSLocalizedString("linkToEventPage", comment: "Link to event page"))
-                    Text("\(event.info_url?.nameInLanguage() ?? NSLocalizedString("noLinkAvailable", comment: "No link available"))")
-                        .foregroundColor(.blue)
-                        .onTapGesture {
-                            if let urlString = event.info_url?.values.first, let url = URL(string: urlString) {
-                                UIApplication.shared.open(url)
+                .border(.black)
+                
+                ZStack{
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .edgesIgnoringSafeArea(.all)
+                    // Display link to Event
+                    VStack(alignment: .center){
+                        Text(NSLocalizedString("linkToEventPage", comment: "Link to event page"))
+                        Text("\(event.info_url?.nameInLanguage() ?? NSLocalizedString("noLinkAvailable", comment: "No link available"))")
+                            .foregroundColor(.red)
+                            .onTapGesture {
+                                if let urlString = event.info_url?.values.first, let url = URL(string: urlString) {
+                                    UIApplication.shared.open(url)
+                                }
                             }
-                        }
-                        .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                            .padding(EdgeInsets(top: 8, leading: 5, bottom: 8, trailing: 5))
+                    }
                 }
+                .border(.black)
             }
         }
     }
+    
     struct DetailCardView_Previews: PreviewProvider {
         static var previews: some View {
             let sampleEvent = Event(

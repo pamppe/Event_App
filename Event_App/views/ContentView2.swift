@@ -1,12 +1,18 @@
-/// KOODI HEAP-LOGOLLA
+//
+//  ContentView2.swift
+//  Event_App
+//
+//  Created by iosdev on 11/9/23.
+//
 
 import SwiftUI
 
 struct ContentView2: View {
     private var listOfEvents: [Event] = []
     @State private var showMenu: Bool = false
-
+    
     var body: some View {
+        
         Text("HEAP")
             .padding(150)
             .background(.blue, ignoresSafeAreaEdges: .all)
@@ -18,7 +24,10 @@ struct ContentView2: View {
             ZStack{
                 VStack(alignment: .leading){
                     EventCardView()
-                        .navigationBarTitle(NSLocalizedString("popularNow", comment: "Navigation bar title for popular events"))
+                        .navigationBarTitle(showMenu ? "" : NSLocalizedString("popularNow", comment: "Navigation bar title for popular events"))
+                        .navigationBarBackButtonHidden(true)
+                        .navigationBarTitleDisplayMode(.inline)
+                    
                 }
                 GeometryReader { _ in
                     HStack {
@@ -30,7 +39,6 @@ struct ContentView2: View {
                 }
                 .background(Color.black.opacity(showMenu ? 0.5 : 0))
             }
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 Button{
                     self.showMenu.toggle()
@@ -47,9 +55,12 @@ struct ContentView2: View {
                 }
             }
         }
-        .navigationBarBackButtonHidden(true)
+    }
+    private var displayedTitle: String {
+        showMenu ? "" : NSLocalizedString("popularNow", comment: "Navigation bar title for popular events")
     }
 }
+
 
 struct ContentView2_Previews: PreviewProvider {
     static var previews: some View {

@@ -1,5 +1,3 @@
-/// INFOVIEW
-
 //
 //  InfoView.swift
 //  Event_App
@@ -16,10 +14,12 @@ struct InfoView: View {
             ZStack{
                 Color.white
                     .edgesIgnoringSafeArea(.all)
+                
                 Text(NSLocalizedString("aboutUsTitle", comment: "Title for About Us page"))
                     .font(Font.custom("Modak", size: 35, relativeTo: .title))
                     .foregroundColor(.black)
                     .offset(y: -250)
+                
                 Text(NSLocalizedString("aboutUsDescription", comment: "Description for About Us page"))
                     .frame(width: 360)
                     .lineLimit(30)

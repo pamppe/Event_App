@@ -7,17 +7,17 @@
 
 import Foundation
 
-//--------------------------Func-------------------------------------
-                        //Event
 func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     var urlString = "https://api.hel.fi/linkedevents/v1/event/"
     guard URL(string: urlString) != nil else { return }
-
+    
     // Change HTTP to HTTPS
-        if let url = URL(string: urlString), url.scheme == "http" {
-            urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
-        }
-        guard let url = URL(string: urlString) else { return }
+    if let url = URL(string: urlString), url.scheme == "http" {
+        urlString = urlString.replacingOccurrences(of: "http://", with: "https://")
+    }
+    
+    guard let url = URL(string: urlString) else { return }
+    
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
             print("Error fetching data: \(error)")
@@ -29,16 +29,7 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
             completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
             return
         }
-
-        // Print the raw JSON response for debugging
-//        do {
-//            let jsonData = try JSONSerialization.data(withJSONObject: try JSONSerialization.jsonObject(with: data), options: .prettyPrinted)
-//            let jsonString = String(data: jsonData, encoding: .utf8)
-//            print("Raw JSON Response: \(jsonString ?? "Unable to convert to JSON string")")
-//        } catch {
-//            print("Error converting JSON data to string: \(error)")
-//        }
-
+        
         do {
             let response = try JSONDecoder().decode(EventResponse.self, from: data)
             print("Number of events fetched: \(response.data.count)")
@@ -55,7 +46,7 @@ func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     task.resume()
 }
 
-                //Duplicate
+//func for removing duplicates
 func removeDuplicateEvents(events: [Event]) -> [Event] {
     var uniqueEvents = [Event]()
     var seenFinnishNames = Set<String>()
@@ -72,10 +63,8 @@ func removeDuplicateEvents(events: [Event]) -> [Event] {
     }
     return uniqueEvents
 }
-//--------------------------Func end---------------------------------
 
 
-//------------------------Event------------------------------
 struct EventResponse: Codable {
     let data: [Event]
 }
@@ -102,8 +91,7 @@ struct Event: Identifiable, Codable {
         case images
         case super_event
     }
-
-   
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -133,7 +121,6 @@ struct Event: Identifiable, Codable {
         }
     }
 }
-//------------------------Event end--------------------------
 
 typealias LocalizedString = [String: String]
 

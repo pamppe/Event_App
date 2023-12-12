@@ -12,32 +12,31 @@ struct EventCardView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     var body: some View {
-            VStack {
-                if events.isEmpty {
-                    Text(NSLocalizedString("loadingMessage", comment: "Loading message"))
-                } else if let errorMessage = errorMessage {
-                    // The %@ will be replaced with the actual error message
-                    Text(String(format: NSLocalizedString("errorMessage", comment: "Error message"), errorMessage))
-                } else {
-                    List(events) { event in
-                        NavigationLink(destination: DetailView(event: event)){
-                            VStack(alignment: .leading) {
-                                ZStack {
-                                    // Background with darker shades of blue
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                    .edgesIgnoringSafeArea(.all)
-                                    CardView(event: event)
-                                        .padding()
-                                }
+        VStack {
+            if events.isEmpty {
+                Text(NSLocalizedString("loadingMessage", comment: "Loading message"))
+            } else if let errorMessage = errorMessage {
+                // The %@ will be replaced with the actual error message
+                Text(String(format: NSLocalizedString("errorMessage", comment: "Error message"), errorMessage))
+            } else {
+                List(events) { event in
+                    NavigationLink(destination: DetailView(event: event)){
+                        VStack(alignment: .leading) {
+                            ZStack {
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                                .edgesIgnoringSafeArea(.all)
+                                CardView(event: event)
+                                    .padding()
                             }
                         }
                     }
                 }
             }
+        }
         .onAppear {
             isLoading = true
             fetchEventData { result in
@@ -54,38 +53,44 @@ struct EventCardView: View {
         }
     }
 }
+// Card view for events
 struct CardView: View {
     var event: Event
     var body: some View {
         VStack(alignment: .center) {
-                Text(event.name.nameInLanguage())
-                .padding(.leading, 15)
-                    .font(.headline)
-                    .shadow(radius: 30)
-                if let imageUrl = event.images.first?.url,
-                   let encodedUrlString = imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-                   let url = URL(string: encodedUrlString) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(15)
-                                .shadow(radius: 30)
-                        case .failure:
-                            Text(NSLocalizedString("imageNotAvailable", comment: "Image not available"))
-                        @unknown default:
-                            EmptyView() // Fallback to an empty view for any unknown case
-                        }
-                        
+            Text(event.name.nameInLanguage())
+                .font(.headline)
+                .shadow(radius: 30)
+                .padding(EdgeInsets(top: 20, leading: 20, bottom: 5, trailing: 20))
+                .lineLimit(2)
+            
+            if let imageUrl = event.images.first?.url,
+               let encodedUrlString = imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+               let url = URL(string: encodedUrlString) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(15)
+                            .shadow(radius: 30)
+                    case .failure:
+                        Text(NSLocalizedString("imageNotAvailable", comment: "Image not available"))
+                    @unknown default:
+                        EmptyView() // Fallback to an empty view for any unknown case
                     }
-                    .frame(width: 500, height: 200)
-                    .padding(.leading, 15)
+                    
                 }
+                .frame(width: 500, height: 250)
+                .padding(.leading, 15)
+            }
+            Spacer()
         }
+        .frame(height: 250)
+        .padding(.bottom, 20)
     }
     struct EventCardView_Previews: PreviewProvider {
         static var previews: some View {

@@ -1,6 +1,3 @@
-/// SIDEMENUVIEW
-
-
 //
 //  SideMenuView.swift
 //  Event_App
@@ -15,21 +12,6 @@ struct SideMenuView: View {
     var body: some View {
         
         VStack {
-//                VStack {
-//                    NavigationLink(destination: ContentView2()) {
-//                        Image(systemName: "house.fill")
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fit)
-//                            .frame(width: 35, height: 35)
-//                            .foregroundColor(.black)
-//                            .offset(x: -33)
-//                            .shadow(color: .black, radius: 4, x: 2, y: 6)
-//                        Text("Etusivu")
-//                            .foregroundColor(.black)
-//                            .font(.title)
-//                            .offset(x: -15)
-//                    }
-//                }
             Divider()
                 .frame(width: 200, height: 2)
                 .background(Color.white)
@@ -73,21 +55,6 @@ struct SideMenuView: View {
                 .background(Color.white)
                 .padding(.horizontal, 16)
             
-            VStack {
-                NavigationLink(destination: CategoriesView()) {
-                    Image(systemName: "heart.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 35, height: 35)
-                        .foregroundColor(.red)
-                        .offset(x: -30)
-                        .shadow(color: .black, radius: 4, x: 2, y: 6)
-                    Text(NSLocalizedString("favorites", comment: "Categories menu item"))
-                        .foregroundColor(.black)
-                        .font(.title)
-                        .offset(x: -15)
-                }
-            }
             Spacer()
             VStack {
                 NavigationLink(destination: InfoView()) {
