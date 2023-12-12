@@ -14,6 +14,7 @@ struct DetailCardView: View {
         VStack(alignment: .leading, spacing: 16) {
             List {
                 
+                //Theme
                 ZStack{
                     LinearGradient(
                         gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
@@ -21,14 +22,15 @@ struct DetailCardView: View {
                         endPoint: .bottom
                     )
                     .edgesIgnoringSafeArea(.all)
-                    //Display event name
+                    
+                    //Event name
                     VStack(alignment: .leading){
                         Text("\(event.name.nameInLanguage())")
                     }
                 }
                 .border(.black)
                 
-                //Display image
+                //Image
                 VStack(alignment: .center){
                     ForEach(event.images, id: \.url) { image in
                         if let imageUrl = event.images.first?.url,
@@ -55,6 +57,7 @@ struct DetailCardView: View {
                     }
                 }
                 
+                //Theme
                 ZStack{
                     LinearGradient(
                         gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
@@ -62,7 +65,8 @@ struct DetailCardView: View {
                         endPoint: .bottom
                     )
                     .edgesIgnoringSafeArea(.all)
-                    // Display description
+                    
+                    // Description
                     VStack(alignment: .center){
                         Text(NSLocalizedString("description", comment: "Description"))
                         Text("\(event.sanitizedDescription())")
@@ -71,6 +75,7 @@ struct DetailCardView: View {
                 }
                 .border(.black)
                 
+                //Theme
                 ZStack{
                     LinearGradient(
                         gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),
@@ -78,7 +83,8 @@ struct DetailCardView: View {
                         endPoint: .bottom
                     )
                     .edgesIgnoringSafeArea(.all)
-                    // Display link to Event
+                    
+                    // Link to event web page
                     VStack(alignment: .center){
                         Text(NSLocalizedString("linkToEventPage", comment: "Link to event page"))
                         Text("\(event.info_url?.nameInLanguage() ?? NSLocalizedString("noLinkAvailable", comment: "No link available"))")

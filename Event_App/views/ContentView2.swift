@@ -20,15 +20,17 @@ struct ContentView2: View {
             .font(Font.custom("Modak", size: 60, relativeTo: .title))
             .foregroundColor(.white)
             .shadow(color: .black, radius: 4, x: 2, y: 6)
+        
         NavigationView {
             ZStack{
+                //Display events card view
                 VStack(alignment: .leading){
                     EventCardView()
                         .navigationBarTitle(showMenu ? "" : NSLocalizedString("popularNow", comment: "Navigation bar title for popular events"))
                         .navigationBarBackButtonHidden(true)
                         .navigationBarTitleDisplayMode(.inline)
-                    
                 }
+                //Side menu
                 GeometryReader { _ in
                     HStack {
                         Spacer()
@@ -57,7 +59,6 @@ struct ContentView2: View {
         }
     }
 }
-
 
 struct ContentView2_Previews: PreviewProvider {
     static var previews: some View {

@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct SideMenuView: View {
-    
     var body: some View {
-        
         VStack {
             Divider()
                 .frame(width: 200, height: 2)
                 .background(Color.white)
                 .padding(.horizontal, 16)
+            
             VStack {
+                //Settings
                 NavigationLink(destination: SettingsView()) {
                     Image(systemName: "gear")
                         .resizable()
@@ -31,11 +31,14 @@ struct SideMenuView: View {
                         .offset(x: -1)
                 }
             }
+            
             Divider()
                 .frame(width: 200, height: 2)
                 .background(Color.white)
                 .padding(.horizontal, 16)
+            
             VStack {
+                //Categories
                 NavigationLink(destination: CategoriesView()) {
                     Image(systemName: "folder.fill")
                         .resizable()
@@ -56,7 +59,9 @@ struct SideMenuView: View {
                 .padding(.horizontal, 16)
             
             Spacer()
+            
             VStack {
+                //Info
                 NavigationLink(destination: InfoView()) {
                     Text(NSLocalizedString("infoAboutUs", comment: "Categories menu item"))
                         .foregroundColor(.black)

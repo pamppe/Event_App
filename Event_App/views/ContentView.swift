@@ -9,6 +9,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationView {
+            //Theme
             ZStack {
                 LinearGradient(
                     gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6), Color.blue]),

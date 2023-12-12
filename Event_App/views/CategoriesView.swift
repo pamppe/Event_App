@@ -60,13 +60,11 @@ struct CategoriesView: View {
         Category(name: NSLocalizedString("astronomy", comment: "Astronomy category"), symbolName: "star", backgroundColor: .orange, iconColor: .white)
     ]
     
-    
     @StateObject var speechRecognizer = SpeechRecognizer()
     @State var isRecording = false
     @State private var searchQuery = ""
     @State private var searchQueryFromSpeech = ""
     @State private var textFieldText = ""
-    
     
     // Function to update searchQuery based on both text input and speech recognition
     func updateSearchQuery() {
@@ -74,11 +72,14 @@ struct CategoriesView: View {
             searchQuery = searchQueryFromSpeech
         }
     }
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
                 VStack(alignment: .leading, spacing: 1) {
+                    
                     HStack(spacing: 1) {
+                        //Voice search button
                         Button(action: {
                             if isRecording {
                                 stopRecord()
@@ -94,6 +95,7 @@ struct CategoriesView: View {
                         }
                         .padding(.leading, 8)
                         
+                        //Searchbar
                         TextField("Etsi kategorioita", text: $searchQuery)
                             .padding(6)
                             .background(Color(.systemGray6))
@@ -151,6 +153,7 @@ struct CategoriesView: View {
             }
         }
     }
+    
     //Functions for starting and stopping the voice to speech recording
     func startRecord(){
         speechRecognizer.resetTranscript()
@@ -162,7 +165,7 @@ struct CategoriesView: View {
         isRecording = false
     }
     
-    
+    //Filtering categories
     var filteredCategories: [Category] {
         if searchQuery.isEmpty {
             return categories
@@ -173,7 +176,7 @@ struct CategoriesView: View {
 }
 
 
-
+//When opening a category, displays this view
 struct EventListView: View {
     var category: Category
     @State private var events = [Event]()
@@ -187,7 +190,9 @@ struct EventListView: View {
             } else if let errorMessage = errorMessage {
                 Text("Error: \(errorMessage)")
             } else {
+                //Display a list of events in category
                 List(events, id: \.id) { event in
+                    //Clicking an event directs to the detail view
                     NavigationLink(destination: DetailView(event: event)){
                         VStack(alignment: .leading) {
                             ZStack {
@@ -202,11 +207,13 @@ struct EventListView: View {
         .navigationTitle(category.name)
         .onAppear {
             isLoading = true
+            //Get events in category
             fetchEventsForCategory(category) { result in
                 DispatchQueue.main.async {
                     isLoading = false
                     switch result {
                     case .success(let fetchedEvents):
+                        //Remove duplicates
                         self.events = removeDuplicateEvents(events: fetchedEvents)
                     case .failure(let error):
                         self.errorMessage = error.localizedDescription
@@ -220,12 +227,12 @@ struct EventListView: View {
         isLoading = true
         let searchString = category.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let urlString = "https://api.hel.fi/linkedevents/v1/event/?combined_text=\(searchString)"
-
+        
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
         }
-
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             DispatchQueue.main.async {
                 self.isLoading = false
@@ -247,5 +254,4 @@ struct EventListView: View {
             }
         }.resume()
     }
-
 }

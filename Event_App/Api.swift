@@ -7,6 +7,7 @@
 
 import Foundation
 
+//Function for getting the event data
 func fetchEventData(completion: @escaping (Result<[Event], Error>) -> Void) {
     var urlString = "https://api.hel.fi/linkedevents/v1/event/"
     guard URL(string: urlString) != nil else { return }
@@ -92,17 +93,6 @@ struct Event: Identifiable, Codable {
         case super_event
     }
     
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(name, forKey: .name)
-        
-        if let firstLanguage = description.keys.first, let descriptionText = description[firstLanguage] {
-            try container.encode([firstLanguage: descriptionText], forKey: .description)
-        }
-        try container.encode(info_url, forKey: .info_url)
-        
-    }
     // Helper function to sanitize HTML content
     func sanitizedDescription() -> String {
         guard let htmlString = description["fi"] else {
