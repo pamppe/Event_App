@@ -12,7 +12,7 @@ Heap is a mobile application desinges and coded in 2023 by four ICT engineering 
 ## Acknowledgements
 ### API
  - [Helsinki developers](https://dev.hel.fi/apis/linkedevents)
-### Tools
+### Tools used
  - [Chat gpt](https://chat.openai.com/)
 ### Code from videos
  - [Software Sage - SwiftUI Tutorial: Creating a Side Menu (Xcode 13, Swift 5)](https://www.youtube.com/watch?v=J7fqzpBChyg)
